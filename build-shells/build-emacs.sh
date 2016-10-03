@@ -12,11 +12,20 @@
 # export GIT_CURL_VERBOSE=1
 
 
-TARGET_PLATFORM=64
+echo "---- ${0} : begin ----"
 
-if [ "${1}" = "--x32" ]; then 
-    TARGET_PLATFORM=32
+
+if [ "${MSYSTEM}" = "MINGW64" ]; then
+    readonly TARGET_PLATFORM=64
+elif [ "${MSYSTEM}" = "MINGW32" ]; then
+    readonly TARGET_PLATFORM=32
+elif [ -z "${MSYSTEM}" ]; then
+    echo "not detected MSYS."
+    echo "please launch from MSYS shell."
+    exit
 fi
+echo "detected MSYS : ${MSYSTEM}"
+
 
 
 readonly FILE_NAME="emacs-25.1"
@@ -213,4 +222,6 @@ install_shared_objects
 
 popd
 
+
+echo "---- ${0} : end ----"
 

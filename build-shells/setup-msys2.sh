@@ -2,11 +2,21 @@
 #! /bin/sh
 
 
-TARGET_PLATFORM=x86_64
 
-if [ "${1}" = "--x32" ]; then 
-    TARGET_PLATFORM=i686
+echo "---- ${0} : begin ----"
+
+
+if [ "${MSYSTEM}" = "MINGW64" ]; then
+    readonly TARGET_PLATFORM=x86_64
+elif [ "${MSYSTEM}" = "MINGW32" ]; then
+    readonly TARGET_PLATFORM=i686
+elif [ -z "${MSYSTEM}" ]; then
+    echo "not detected MSYS."
+    echo "please launch from MSYS shell."
+    exit
 fi
+echo "detected MSYS : ${MSYSTEM}"
+
 
 
 pacman -Sy
@@ -31,4 +41,7 @@ readonly PACKAGE_LIST=(
 
 
 pacman --needed -S --noconfirm "${PACKAGE_LIST[@]}"
+
+
+echo "---- ${0} : end ----"
 

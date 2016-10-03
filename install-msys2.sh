@@ -22,6 +22,8 @@ pushd msys64
 readonly MSYS_ROOT_PATH=$(pwd)
 
 ./mingw64.exe
+# ./mingw32.exe
+
 popd
 
 echo $HOME
