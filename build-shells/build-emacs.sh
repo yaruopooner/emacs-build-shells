@@ -204,7 +204,7 @@ function install_shared_objects()
         local readonly SO_PATH="${SO_IMPORT_PATH}/${SO}"
 
         if [ -f "${SO_PATH}" ]; then
-            # echo "${SO}"
+            # echo "---- ${SO_PATH} ----"
             TMP_ARRAY+=( $(objdump -x "${SO_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
         fi
     done
