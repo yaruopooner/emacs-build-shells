@@ -20,8 +20,8 @@ if [ "${MSYSTEM}" = "MINGW64" ]; then
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
     readonly TARGET_PLATFORM=32
 elif [ -z "${MSYSTEM}" ]; then
-    echo "not detected MSYS."
-    echo "please launch from MSYS shell."
+    echo "not detected MinGW."
+    echo "please launch from MinGW64/32 shell."
     exit
 fi
 echo "detected MSYS : ${MSYSTEM}"
@@ -217,12 +217,13 @@ function install_shared_objects()
 
         if [ -f "${SO_PATH}" ]; then
             cp "${SO_PATH}" "${SO_EXPORT_PATH}"
+            echo "--- install_shared_objects : copy : ${SO_PATH} ==> ${SO_EXPORT_PATH} ---"
         # else
         #     echo "--- install_shared_objects : ${SO_PATH} not found ---"
         fi
     done
 
-    printf "%s\n" "${SO_LIST[@]}" > ../install_shared_objects.log
+    # printf "%s\n" "${SO_LIST[@]}" > ../install_shared_objects.log
     
     echo "--- install_shared_objects : end ---"
 }

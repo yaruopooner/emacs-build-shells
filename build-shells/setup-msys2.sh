@@ -11,8 +11,8 @@ if [ "${MSYSTEM}" = "MINGW64" ]; then
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
     readonly TARGET_PLATFORM=i686
 elif [ -z "${MSYSTEM}" ]; then
-    echo "not detected MSYS."
-    echo "please launch from MSYS shell."
+    echo "not detected MinGW."
+    echo "please launch from MinGW64/32 shell."
     exit
 fi
 echo "detected MSYS : ${MSYSTEM}"
@@ -29,14 +29,14 @@ readonly PACKAGE_LIST=(
     git
     base-devel
     mingw-w64-${TARGET_PLATFORM}-toolchain
+    mingw-w64-${TARGET_PLATFORM}-gnutls
     mingw-w64-${TARGET_PLATFORM}-xpm-nox
-    mingw-w64-${TARGET_PLATFORM}-libtiff
     mingw-w64-${TARGET_PLATFORM}-giflib
+    mingw-w64-${TARGET_PLATFORM}-libtiff
     mingw-w64-${TARGET_PLATFORM}-libpng
     mingw-w64-${TARGET_PLATFORM}-libjpeg-turbo
     mingw-w64-${TARGET_PLATFORM}-librsvg
     mingw-w64-${TARGET_PLATFORM}-libxml2
-    mingw-w64-${TARGET_PLATFORM}-gnutls
 )
 
 
