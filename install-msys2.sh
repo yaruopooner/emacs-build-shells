@@ -2,8 +2,8 @@
 #! /bin/sh
 
 
-readonly MSYS2_ARCHIVE="msys2-base-x86_64-20160921.tar.xz"
-readonly MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/${MSYS2_ARCHIVE}"
+readonly MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+readonly MSYS2_ARCHIVE=$( basename "${MSYS2_URI}" )
 
 
 if [ ! -f "${MSYS2_ARCHIVE}" ]; then

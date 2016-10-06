@@ -27,14 +27,15 @@ fi
 echo "detected MSYS : ${MSYSTEM}"
 
 
+readonly EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
+readonly EMACS_ARCHIVE_NAME=$( basename "${EMACS_ARCHIVE_URI}" )
+readonly EMACS_VERSION_NAME=$( basename --suffix ".tar.xz" "${EMACS_ARCHIVE_NAME}" )
 
-readonly FILE_NAME="emacs-25.1"
-readonly FULL_NAME="${FILE_NAME}.tar.xz"
+readonly PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
+readonly PATCH_NAME=$( basename "${PATCH_URI}" )
 
-readonly PATCH_NAME="emacs-25.1-windows-ime-simple.patch"
-
-readonly PARENT_PATH=$(cd $(dirname ${0}) && pwd)
-readonly EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${FILE_NAME}"
+readonly PARENT_PATH=$( cd $(dirname ${0}) && pwd )
+readonly EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${EMACS_VERSION_NAME}"
 
 
 function download_from_web()
@@ -42,18 +43,18 @@ function download_from_web()
     echo "--- download_from_web : begin ---"
 
     # donwload from web
-    if [ ! -f "${FULL_NAME}" ]; then
-        wget "http://ftp.gnu.org/gnu/emacs/${FULL_NAME}"
+    if [ ! -f "${EMACS_ARCHIVE_NAME}" ]; then
+        wget "${EMACS_ARCHIVE_URI}"
     fi
 
     if [ ! -f "${PATCH_NAME}" ]; then
-        wget "http://cha.la.coocan.jp/files/${PATCH_NAME}"
+        wget "${PATCH_URI}"
     fi
 
     # archive expand
-    if [ ! -d "${FILE_NAME}" ]; then
-        if [ -f "${FULL_NAME}" ]; then
-            tar -Jxvf "${FULL_NAME}"
+    if [ ! -d "${EMACS_VERSION_NAME}" ]; then
+        if [ -f "${EMACS_ARCHIVE_NAME}" ]; then
+            tar -Jxvf "${EMACS_ARCHIVE_NAME}"
         fi
     fi
 
@@ -66,10 +67,10 @@ function download_from_git()
 {
     echo "--- download_from_git : begin ---"
 
-    if [ ! -d "${FILE_NAME}" ]; then
-        mkdir "${FILE_NAME}"
+    if [ ! -d "${EMACS_VERSION_NAME}" ]; then
+        mkdir "${EMACS_VERSION_NAME}"
     fi
-    pushd "${FILE_NAME}"
+    pushd "${EMACS_VERSION_NAME}"
 
     # curl --proxy "${http_proxy}"
     # git clone git://git.sv.gnu.org/emacs.git emacs-25
@@ -141,6 +142,7 @@ function execute_configure()
     # 64/32bit
     PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules --without-compress-install
     # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules
+    # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
     echo "--- execute_configure : generated makefile ---"
 
     echo "--- execute_configure : end ---"
@@ -150,6 +152,7 @@ function execute_configure()
 function build()
 {
     echo "--- build : begin ---"
+
     # make -j
     # make -j bootstrap
     make bootstrap
@@ -237,7 +240,7 @@ function install_shared_objects()
 download_from_web
 # download_from_git
 
-pushd "${FILE_NAME}"
+pushd "${EMACS_VERSION_NAME}"
 
 cleanup
 apply_patch

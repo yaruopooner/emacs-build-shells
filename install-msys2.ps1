@@ -77,8 +77,7 @@ function DownloadFromURI( $uri, [switch]$expand, [switch]$install )
 function SetupEnvironment()
 {
     $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
-    $archive_msys2 = "msys2-base-x86_64-20160921.tar.xz"
-    $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/" + $archive_msys2
+    $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
 
     DownloadFromURI -Uri $uri_7zip -Expand
     DownloadFromURI -Uri $uri_msys2 -Expand
@@ -87,7 +86,7 @@ function SetupEnvironment()
     {
         $tmp_dir="msys64/tmp"
         Copy-Item build-shells $tmp_dir -recurse -force
-        echo $HOME
+        Write-Host $HOME
 
         pushd msys64
         ./mingw64.exe
