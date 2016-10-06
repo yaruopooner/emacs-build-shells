@@ -2,7 +2,7 @@
 
 
 
-function DownloadFromURI( $uri, [switch]$expand, [switch]$forceExpand, [switch]$install )
+function DownloadFromURI( $uri, [switch]$expand, [switch]$install )
 {
     # directory check
     # $download_directory = "./tools-latest-version/"
@@ -32,14 +32,33 @@ function DownloadFromURI( $uri, [switch]$expand, [switch]$forceExpand, [switch]$
     if ( $expand )
     {
         $extension = [System.IO.Path]::GetExtension( $downloaded_file )
-        if ( ( $extension -eq ".zip" ) -or $forceExpand )
-        {
-            $expanded_path = [System.IO.Path]::GetFileNameWithoutExtension( $downloaded_file )
+        $expanded_path = [System.IO.Path]::GetFileNameWithoutExtension( $downloaded_file )
 
+        if ( $extension -eq ".zip" )
+        {
             if ( !( Test-Path -Path $expanded_path -PathType container ) )
             {
                 Write-Host "#expanding : " + $downloaded_file
                 Expand-Archive -Path $downloaded_file -DestinationPath "./" -Force
+            }
+        }
+        $cmd = "./7za.exe"
+        if ( ( $extension -eq ".xz" ) -and ( Test-Path $cmd ) )
+        {
+            if ( !( Test-Path -Path $expanded_path -PathType any ) )
+            {
+                Write-Host "#expanding : " + $downloaded_file
+                & $cmd x $downloaded_file -aos
+            }
+
+            $extension2 = [System.IO.Path]::GetExtension( $expanded_path )
+            if ( $extension2 -eq ".tar" )
+            {
+                $extract_name = [System.IO.Path]::GetFileNameWithoutExtension( $expanded_path )
+                if ( !( Test-Path -Path $extract_name -PathType any ) )
+                {
+                    & $cmd x $expanded_path -aos
+                }
             }
         }
     }
@@ -57,20 +76,12 @@ function DownloadFromURI( $uri, [switch]$expand, [switch]$forceExpand, [switch]$
 
 function SetupEnvironment()
 {
+    $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
     $archive_msys2 = "msys2-base-x86_64-20160921.tar.xz"
     $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/" + $archive_msys2
-    $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
 
-    # DownloadFromURI -Uri $uri_msys2 -Expand
-    DownloadFromURI -Uri $uri_msys2
     DownloadFromURI -Uri $uri_7zip -Expand
-
-    if ( !( Test-Path -Path "./msys64" -PathType container ) )
-    {
-        ./7za x $archive_msys2 -aos
-        $extract_name = [System.IO.Path]::GetFileNameWithoutExtension( $archive_msys2 )
-        ./7za x $extract_name -aos
-    }
+    DownloadFromURI -Uri $uri_msys2 -Expand
 
     if ( Test-Path -Path "./msys64" -PathType container )
     {
@@ -87,4 +98,6 @@ function SetupEnvironment()
 
 
 setupEnvironment
+
+# [Console]::ReadKey()
 
