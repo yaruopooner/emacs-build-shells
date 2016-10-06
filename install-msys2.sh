@@ -14,24 +14,25 @@ if [ -f "${MSYS2_ARCHIVE}" -a ! -d msys64 ]; then
     tar -Jxvf "${MSYS2_ARCHIVE}"
 fi
 
+if [ -d msys64 ]; then
+    readonly TMP_DIR="msys64/tmp"
+    cp -R build-shells "${TMP_DIR}"
 
-unset HOME
+    unset HOME
 
-pushd msys64
+    pushd msys64
 
-readonly MSYS_ROOT_PATH=$(pwd)
+    readonly MSYS_ROOT_PATH=$(pwd)
 
-./mingw64.exe
-# ./mingw32.exe
+    ./mingw64.exe
+    # ./mingw32.exe
 
-popd
+    popd
 
-echo $HOME
+    echo $HOME
 
-readonly TMP_DIR="msys64/tmp"
+    # pushd "${TMP_DIR}/build-shells"
 
-cp -R build-shells "${TMP_DIR}"
+    # ${MSYS_ROOT_PATH}/mingw64.exe ./sample.h
+fi
 
-# pushd "${TMP_DIR}/build-shells"
-
-# ${MSYS_ROOT_PATH}/mingw64.exe ./sample.h

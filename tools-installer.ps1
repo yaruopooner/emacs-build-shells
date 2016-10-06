@@ -5,14 +5,14 @@
 function DownloadFromURI( $uri, [switch]$expand, [switch]$forceExpand, [switch]$install )
 {
     # directory check
-    $download_directory = "./tools-latest-version/"
+    # $download_directory = "./tools-latest-version/"
 
-    if ( !( Test-Path $download_directory ) )
-    {
-        New-Item -Name $download_directory -Type directory
-    }
+    # if ( !( Test-Path $download_directory ) )
+    # {
+    #     New-Item -Name $download_directory -Type directory
+    # }
 
-    pushd $download_directory
+    # pushd $download_directory
 
     # download
     $downloaded_file = [System.IO.Path]::GetFileName( $uri )
@@ -50,21 +50,41 @@ function DownloadFromURI( $uri, [switch]$expand, [switch]$forceExpand, [switch]$
         Start-Process -FilePath $downloaded_file
     }
     
-    popd
+    # popd
 }
 
 
 
 function SetupEnvironment()
 {
-    
-    $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+    $archive_msys2 = "msys2-base-x86_64-20160921.tar.xz"
+    $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/" + $archive_msys2
+    $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
 
-    DownloadFromURI -Uri $uri_msys2 -Expand
+    # DownloadFromURI -Uri $uri_msys2 -Expand
+    DownloadFromURI -Uri $uri_msys2
+    DownloadFromURI -Uri $uri_7zip -Expand
+
+    if ( !( Test-Path -Path "./msys64" -PathType container ) )
+    {
+        ./7za x $archive_msys2 -aos
+        $extract_name = [System.IO.Path]::GetFileNameWithoutExtension( $archive_msys2 )
+        ./7za x $extract_name -aos
+    }
+
+    if ( Test-Path -Path "./msys64" -PathType container )
+    {
+        $tmp_dir="msys64/tmp"
+        Copy-Item build-shells $tmp_dir -recurse -force
+        echo $HOME
+
+        pushd msys64
+        ./mingw64.exe
+        # ./mingw32.exe
+        popd
+    }
 }
 
 
 setupEnvironment
-
-[Console]::ReadKey()
 
