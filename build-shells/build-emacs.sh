@@ -34,7 +34,7 @@ readonly FULL_NAME="${FILE_NAME}.tar.xz"
 readonly PATCH_NAME="emacs-25.1-windows-ime-simple.patch"
 
 readonly PARENT_PATH=$(cd $(dirname ${0}) && pwd)
-readonly EMACS_BINARY_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${FILE_NAME}"
+readonly EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${FILE_NAME}"
 
 
 function download_from_web()
@@ -92,8 +92,8 @@ function cleanup()
         # make uninstall
     fi
 
-    if [ -d "${EMACS_BINARY_EXPORT_PATH}" ]; then
-        rm -rf "${EMACS_BINARY_EXPORT_PATH}"
+    if [ -d "${EMACS_EXPORT_PATH}" ]; then
+        rm -rf "${EMACS_EXPORT_PATH}"
     fi
 
     echo "--- cleanup : end ---"
@@ -139,8 +139,8 @@ function execute_configure()
     # fi
 
     # 64/32bit
-    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_BINARY_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules --without-compress-install
-    # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_BINARY_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules
+    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules --without-compress-install
+    # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules
     echo "--- execute_configure : generated makefile ---"
 
     echo "--- execute_configure : end ---"
@@ -159,37 +159,49 @@ function build()
 }
 
 
+readonly EMACS_BINARY_EXPORT_PATH="${EMACS_EXPORT_PATH}/bin"
+readonly SO_EXPORT_PATH="${EMACS_BINARY_EXPORT_PATH}"
 readonly SO_IMPORT_PATH="/mingw${TARGET_PLATFORM}/bin"
-readonly SO_EXPORT_PATH="${EMACS_BINARY_EXPORT_PATH}/bin"
 
 
 readonly SO_BASE_LIST=(
     libgcc_s_seh-1.dll  #x86_64 only
     libgcc_s_dw2-1.dll  #x86 only
-    # libgdk_pixbuf-2.0-0.dll
-    libgif-7.dll
-    # libglib-2.0-0.dll
     libgnutls-30.dll
-    # libgmp-10.dll
-    # libhogweed-4-2.dll
-    # libidn-11.dll
-    # libnettle-6-2.dll
-    # libp11-kit-0.dll
-    # libtasn1-6.dll
-    # libffi-6.dll
-    # libintl-8.dll
-    # libgobject-2.0-0.dll
-    # libiconv-2.dll
+    libxml2-2.dll
+    libXpm-noX4.dll
+    libgif-7.dll
     libjpeg-8.dll
     libpng16-16.dll
     librsvg-2-2.dll
     libtiff-5.dll
-    # liblzma-5.dll
-    # libwinpthread-1.dll
-    libxml2-2.dll
-    libXpm-noX4.dll
-    # zlib1.dll
 )
+
+
+function search_executable_files()
+{
+    local readonly  SEARCH_PATH="${1}"
+    local readonly  TMP_ARRAY=( $( find "${SEARCH_PATH}" -type f -regex ".*\.exe$" -printf "%f\n" ) )
+
+    echo "${TMP_ARRAY[@]}"
+}
+
+function search_dependent_files()
+{
+    local readonly  SEARCH_PATH="${1}"
+    eval local readonly  PARENT_FILES=('${'"${2}"'[@]}')
+    local TMP_ARRAY=()
+
+    for FILE in "${PARENT_FILES[@]}"; do
+        local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
+
+        if [ -f "${FILE_PATH}" ]; then
+            TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
+        fi
+    done
+
+    echo "${TMP_ARRAY[@]}"
+}
 
 
 function install_shared_objects()
@@ -198,32 +210,25 @@ function install_shared_objects()
 
 
     # glob dependency shared object
-    local TMP_ARRAY=()
+    local readonly EXECUTABLE_FILES=( $( search_executable_files "${EMACS_BINARY_EXPORT_PATH}" ) )
+    local SO_DEPENDENT_LIST=()
 
-    for SO in "${SO_BASE_LIST[@]}"; do
-        local readonly SO_PATH="${SO_IMPORT_PATH}/${SO}"
+    SO_DEPENDENT_LIST+=( $( search_dependent_files "${EMACS_BINARY_EXPORT_PATH}" "EXECUTABLE_FILES" ) )
+    SO_DEPENDENT_LIST+=( $( search_dependent_files "${SO_IMPORT_PATH}" "SO_BASE_LIST" ) )
 
-        if [ -f "${SO_PATH}" ]; then
-            # echo "---- ${SO_PATH} ----"
-            TMP_ARRAY+=( $(objdump -x "${SO_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
-        fi
-    done
+    local readonly SO_IMPORT_LIST=( $( printf "%s\n" "${SO_BASE_LIST[@]}" "${SO_DEPENDENT_LIST[@]}" | sort | uniq ) )
 
-    local readonly SO_DEPEND_LIST=( $(printf "%s\n" "${TMP_ARRAY[@]}" | sort | uniq) )
-    local readonly SO_LIST=( "${SO_BASE_LIST[@]}" "${SO_DEPEND_LIST[@]}" )
-
-    for SO in "${SO_LIST[@]}"; do
+    echo " copy : ${SO_IMPORT_PATH} ==> ${SO_EXPORT_PATH}"
+    for SO in "${SO_IMPORT_LIST[@]}"; do
         local readonly SO_PATH="${SO_IMPORT_PATH}/${SO}"
 
         if [ -f "${SO_PATH}" ]; then
             cp "${SO_PATH}" "${SO_EXPORT_PATH}"
-            echo "--- install_shared_objects : copy : ${SO_PATH} ==> ${SO_EXPORT_PATH} ---"
+            echo "  ${SO}"
         # else
         #     echo "--- install_shared_objects : ${SO_PATH} not found ---"
         fi
     done
-
-    # printf "%s\n" "${SO_LIST[@]}" > ../install_shared_objects.log
     
     echo "--- install_shared_objects : end ---"
 }
