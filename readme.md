@@ -3,24 +3,24 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1. できること</a></li>
-<li><a href="#sec-2">2. 動作環境</a></li>
-<li><a href="#sec-3">3. 準備</a></li>
-<li><a href="#sec-4">4. Step-1</a>
-<ul>
-<li><a href="#sec-4-1">4.1. ビルドされるEmacsバイナリ</a></li>
-<li><a href="#sec-4-2">4.2. オプション</a></li>
-<li><a href="#sec-4-3">4.3. Cygwin またはその他のシェルからのインストール</a></li>
-<li><a href="#sec-4-4">4.4. PowerShell からインストール</a></li>
-<li><a href="#sec-4-5">4.5. 自前でダウンロード＆インストール</a></li>
-</ul>
-</li>
-<li><a href="#sec-5">5. Step-2</a>
+<li><a href="#sec-2">2. ビルドされるEmacsバイナリ</a></li>
+<li><a href="#sec-3">3. 動作環境</a></li>
+<li><a href="#sec-4">4. 準備</a></li>
+<li><a href="#sec-5">5. Step-1</a>
 <ul>
 <li><a href="#sec-5-1">5.1. オプション</a></li>
-<li><a href="#sec-5-2">5.2. 実行</a></li>
+<li><a href="#sec-5-2">5.2. Cygwin またはその他のシェルからのインストール</a></li>
+<li><a href="#sec-5-3">5.3. PowerShell からインストール</a></li>
+<li><a href="#sec-5-4">5.4. 自前でダウンロード＆インストール</a></li>
 </ul>
 </li>
-<li><a href="#sec-6">6. 参考文献</a></li>
+<li><a href="#sec-6">6. Step-2</a>
+<ul>
+<li><a href="#sec-6-1">6.1. オプション</a></li>
+<li><a href="#sec-6-2">6.2. 実行</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7. 参考文献</a></li>
 </ul>
 </div>
 </div>
@@ -44,19 +44,24 @@
     -   Emacs依存DLL解析
     -   Emacsポータブル出力
 
-# 動作環境<a id="sec-2" name="sec-2"></a>
+# ビルドされるEmacsバイナリ<a id="sec-2" name="sec-2"></a>
+
+デフォルトはMinGW64 が起動し x86\_64 が生成される  
+MinGW32 で起動すると x86 が生成される  
+
+# 動作環境<a id="sec-3" name="sec-3"></a>
 
 ↓でテスト  
 Windows 10/7 x86\_64  
 Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28  
 
-# 準備<a id="sec-3" name="sec-3"></a>
+# 準備<a id="sec-4" name="sec-4"></a>
 
     $ git clone https://github.com/yaruopooner/emacs-build-shells.git
 
 またはzipをダウンロードして展開  
 
-# Step-1<a id="sec-4" name="sec-4"></a>
+# Step-1<a id="sec-5" name="sec-5"></a>
 
 MSYS2導入  
 すでに導入済みの場合は `Step-2` へ  
@@ -70,23 +75,18 @@ MSYS2はポータブル版を使用しているので環境を汚さない
 デフォルトでは MinGW64 が起動する  
 MinGW32 を起動させるには下記のオプションで設定可能  
 
-## ビルドされるEmacsバイナリ<a id="sec-4-1" name="sec-4-1"></a>
-
-デフォルトは x86\_64 が生成される  
-MinGW32 で起動すると x86 が生成される  
-
-## オプション<a id="sec-4-2" name="sec-4-2"></a>
+## オプション<a id="sec-5-1" name="sec-5-1"></a>
 
 `install-msys2.XXX.options` の記述を編集することにより  
 ダウンロードするアーカイブ、起動する MinGW64/32 の設定が可能。  
 `install-msys2.XXX.options` が存在しない場合デフォルト値が使用される  
 
-## Cygwin またはその他のシェルからのインストール<a id="sec-4-3" name="sec-4-3"></a>
+## Cygwin またはその他のシェルからのインストール<a id="sec-5-2" name="sec-5-2"></a>
 
     $ cd emacs-build-shells
     $ ./install-msys2.sh
 
-## PowerShell からインストール<a id="sec-4-4" name="sec-4-4"></a>
+## PowerShell からインストール<a id="sec-5-3" name="sec-5-3"></a>
 
 実行には `PowerShell 5` の環境が必要。(Windows10は最初から5だった気が)  
 5未満の場合は以下からダウンロードしてインストール  
@@ -99,7 +99,7 @@ MinGW32 で起動すると x86 が生成される
 または  
 エクスプローラーから `install-msys2.ps1` を実行する  
 
-## 自前でダウンロード＆インストール<a id="sec-4-5" name="sec-4-5"></a>
+## 自前でダウンロード＆インストール<a id="sec-5-4" name="sec-5-4"></a>
 
 <http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/>  
 から自前でダウンロードして展開  
@@ -108,7 +108,7 @@ MinGW32 で起動すると x86 が生成される
 `/msys64/tmp/`  
 へコピーして完了  
 
-# Step-2<a id="sec-5" name="sec-5"></a>
+# Step-2<a id="sec-6" name="sec-6"></a>
 
 MSYS2パッケージアップデートとEmacsビルド  
 
@@ -116,7 +116,7 @@ MSYS2パッケージアップデートとEmacsビルド
 MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
 `emacs/bin/*.exe` の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
 
-## オプション<a id="sec-5-1" name="sec-5-1"></a>
+## オプション<a id="sec-6-1" name="sec-6-1"></a>
 
 `build-emacs.options` の記述を編集することにより  
 ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能  
@@ -127,7 +127,7 @@ MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロー�
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
 
-## 実行<a id="sec-5-2" name="sec-5-2"></a>
+## 実行<a id="sec-6-2" name="sec-6-2"></a>
 
 `install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動し `start.sh` を実行  
 
@@ -140,7 +140,7 @@ MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロー�
 ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用  
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
 
-# 参考文献<a id="sec-6" name="sec-6"></a>
+# 参考文献<a id="sec-7" name="sec-7"></a>
 
 <http://cha.la.coocan.jp/doc/NTEmacsBuild251.html#sec-7-2>  
 <https://github.com/chuntaro/NTEmacs64>  

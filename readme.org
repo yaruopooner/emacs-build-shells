@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/08.02:46:54
+# last updated : 2016/10/08.02:49:30
 
 
 #+TITLE:     Emacs Build Shells
@@ -24,6 +24,10 @@
    - Emacs依存DLL解析
    - Emacsポータブル出力
 
+* ビルドされるEmacsバイナリ
+  デフォルトはMinGW64 が起動し x86_64 が生成される
+  MinGW32 で起動すると x86 が生成される
+
 * 動作環境
   ↓でテスト
   Windows 10/7 x86_64
@@ -47,10 +51,6 @@
 
   デフォルトでは MinGW64 が起動する
   MinGW32 を起動させるには下記のオプションで設定可能
-
-** ビルドされるEmacsバイナリ
-   デフォルトは x86_64 が生成される
-   MinGW32 で起動すると x86 が生成される
 
 ** オプション
    =install-msys2.XXX.options= の記述を編集することにより
