@@ -7,7 +7,7 @@
 <li><a href="#sec-3">3. 準備</a></li>
 <li><a href="#sec-4">4. Step-1</a>
 <ul>
-<li><a href="#sec-4-1">4.1. ビルドされるバイナリ</a></li>
+<li><a href="#sec-4-1">4.1. ビルドされるEmacsバイナリ</a></li>
 <li><a href="#sec-4-2">4.2. オプション</a></li>
 <li><a href="#sec-4-3">4.3. Cygwin またはその他のシェルからのインストール</a></li>
 <li><a href="#sec-4-4">4.4. PowerShell からインストール</a></li>
@@ -69,7 +69,7 @@ MSYS2はポータブル版を使用しているので環境を汚さない
 デフォルトでは MinGW64 が起動する  
 MinGW32 を起動させるには下記のオプションで設定可能  
 
-## ビルドされるバイナリ<a id="sec-4-1" name="sec-4-1"></a>
+## ビルドされるEmacsバイナリ<a id="sec-4-1" name="sec-4-1"></a>
 
 デフォルトは x86\_64 が生成される  
 MinGW32 で起動すると x86 が生成される  
@@ -111,30 +111,31 @@ MinGW32 で起動すると x86 が生成される
 
 MSYS2パッケージアップデートとEmacsビルド  
 
-以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
+以下の手順を行うと  
+MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
 `emacs/bin/*.exe` の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
 
-※プロキシ経由を行っている場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
+※プロキシ経由している場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
 
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
 
-`install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動して start.sh を実行  
+`install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動し `start.sh` を実行  
 
     $ cd /tmp/build-shells
     $ ./start.sh
 
-完了後にログが表示される。  
-※ログファイルとして残る。  
+完了後にログが表示される  
+※ログファイルとして残る  
 
-ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用。  
+ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用  
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
 
 ## オプション<a id="sec-5-1" name="sec-5-1"></a>
 
 `build-emacs.options` の記述を編集することにより  
-ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能。  
-`build-emacs.options` が存在しない場合デフォルト値が使用される。  
+ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能  
+`build-emacs.options` が存在しない場合デフォルト値が使用される  
 
 # 参考文献<a id="sec-6" name="sec-6"></a>
 
