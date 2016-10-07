@@ -2,41 +2,57 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. 動作環境</a></li>
-<li><a href="#sec-2">2. 準備</a></li>
-<li><a href="#sec-3">3. 手順１：MSYS2導入</a>
+<li><a href="#sec-1">1. できること</a></li>
+<li><a href="#sec-2">2. 動作環境</a></li>
+<li><a href="#sec-3">3. 準備</a></li>
+<li><a href="#sec-4">4. 手順１：MSYS2導入</a>
 <ul>
-<li><a href="#sec-3-1">3.1. Cygwin からインストール</a></li>
-<li><a href="#sec-3-2">3.2. PowerShell からインストール</a></li>
-<li><a href="#sec-3-3">3.3. 自前でダウンロード＆インストール</a></li>
-<li><a href="#sec-3-4">3.4. オプション</a></li>
+<li><a href="#sec-4-1">4.1. Cygwin からインストール</a></li>
+<li><a href="#sec-4-2">4.2. PowerShell からインストール</a></li>
+<li><a href="#sec-4-3">4.3. 自前でダウンロード＆インストール</a></li>
+<li><a href="#sec-4-4">4.4. オプション</a></li>
 </ul>
 </li>
-<li><a href="#sec-4">4. 手順２：MSYS2パッケージアップデートとEmacsビルド</a>
+<li><a href="#sec-5">5. 手順２：MSYS2パッケージアップデートとEmacsビルド</a>
 <ul>
-<li><a href="#sec-4-1">4.1. オプション</a></li>
+<li><a href="#sec-5-1">5.1. オプション</a></li>
 </ul>
 </li>
-<li><a href="#sec-5">5. 参考文献</a></li>
+<li><a href="#sec-6">6. 参考文献</a></li>
 </ul>
 </div>
 </div>
 
 
 
-# 動作環境<a id="sec-1" name="sec-1"></a>
+# できること<a id="sec-1" name="sec-1"></a>
+
+以下を一括して行います  
+-   MSYS2ダウンロード
+-   MSYS2アーカイブ展開
+-   MSYS2インストール
+-   MSYS2パッケージアップデート
+-   Emacsアーカイブダウンロード
+-   IMEパッチダウンロード
+-   Emacsアーカイブ展開
+-   Emacsパッチ適用
+-   Emacsビルド
+-   Emacs依存DLL解析
+-   Emacsポータブル出力
+
+# 動作環境<a id="sec-2" name="sec-2"></a>
 
 ↓でテスト  
 Windows 10/7 x86\_64  
 Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28  
 
-# 準備<a id="sec-2" name="sec-2"></a>
+# 準備<a id="sec-3" name="sec-3"></a>
 
     git clone https://github.com/yaruopooner/emacs-build-shells.git
 
 またはzipをダウンロードして展開  
 
-# 手順１：MSYS2導入<a id="sec-3" name="sec-3"></a>
+# 手順１：MSYS2導入<a id="sec-4" name="sec-4"></a>
 
 すでに導入済みの場合は手順２へ。  
 ただしパッケージが更新されるので自分のMSYS2環境が更新される可能性がある  
@@ -46,12 +62,12 @@ Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28
 Cygwin か PowerShell どちらからでもインストール可能  
 MSYS2はポータブル版を使用しているので環境を汚していないはず  
 
-## Cygwin からインストール<a id="sec-3-1" name="sec-3-1"></a>
+## Cygwin からインストール<a id="sec-4-1" name="sec-4-1"></a>
 
     cd emacs-build-shells
     ./install-msys2.sh
 
-## PowerShell からインストール<a id="sec-3-2" name="sec-3-2"></a>
+## PowerShell からインストール<a id="sec-4-2" name="sec-4-2"></a>
 
 実行にはPowerShell 5の環境が必要。(Windows10は最初から5だった気が)  
 5未満の場合は以下からダウンロードしてインストール  
@@ -64,7 +80,7 @@ PowerShell 5.0(Windows Management Framework 5.0)
 または  
 エクスプローラーからinstall-msys2.ps1を実行する  
 
-## 自前でダウンロード＆インストール<a id="sec-3-3" name="sec-3-3"></a>
+## 自前でダウンロード＆インストール<a id="sec-4-3" name="sec-4-3"></a>
 
 <http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/>  
 から自前でダウンロードして展開  
@@ -73,16 +89,16 @@ build-shells
 *msys64/tmp*  
 へコピーして完了  
 
-## オプション<a id="sec-3-4" name="sec-3-4"></a>
+## オプション<a id="sec-4-4" name="sec-4-4"></a>
 
 install-msys2.XXX.options の記述を編集することにより  
 ダウンロードするアーカイブ、起動する MinGW64/32 の設定が可能。  
 install-msys2.XXX.options が存在しない場合デフォルト値が使用される  
 
-# 手順２：MSYS2パッケージアップデートとEmacsビルド<a id="sec-4" name="sec-4"></a>
+# 手順２：MSYS2パッケージアップデートとEmacsビルド<a id="sec-5" name="sec-5"></a>
 
-以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブのダウンロード・展開・ビルドを行う。  
-emacs/bin/\*.exe の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる。  
+以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
+emacs/bin/\*.exe の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
 
 ※プロキシ経由を行っている場合は start.sh 実行前にシェル上で↓を行ってから実行、もしくは以下の設定を build-emacs.options に記述する  
 
@@ -100,13 +116,13 @@ install-msys2 で起動された MinGW64/32 上で作業ディレクトリへ移
 ビルドされたEmacsは↓に置かれるので emacs-XX.X ごと自分の環境へ移動して利用。  
 /msys64/tmp/build-shells/build/XX/emacs-XX.X  
 
-## オプション<a id="sec-4-1" name="sec-4-1"></a>
+## オプション<a id="sec-5-1" name="sec-5-1"></a>
 
 build-emacs.options の記述を編集することにより  
 ダウンロードするアーカイブ、パッチ、 configureの追加設定が可能。  
 build-emacs.options が存在しない場合デフォルト値が使用される。  
 
-# 参考文献<a id="sec-5" name="sec-5"></a>
+# 参考文献<a id="sec-6" name="sec-6"></a>
 
 <http://cha.la.coocan.jp/doc/NTEmacsBuild251.html#sec-7-2>  
 <https://github.com/chuntaro/NTEmacs64>  

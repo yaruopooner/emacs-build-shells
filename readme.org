@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/07.20:51:33
+# last updated : 2016/10/07.21:27:26
 
 
 #+TITLE:     Emacs Build Shells
@@ -8,6 +8,19 @@
 #+OPTIONS:   author:nil timestamp:t |:t \n:t ^:nil
 
 
+* できること
+  以下を一括して行います
+  - MSYS2ダウンロード
+  - MSYS2アーカイブ展開
+  - MSYS2インストール
+  - MSYS2パッケージアップデート
+  - Emacsアーカイブダウンロード
+  - IMEパッチダウンロード
+  - Emacsアーカイブ展開
+  - Emacsパッチ適用
+  - Emacsビルド
+  - Emacs依存DLL解析
+  - Emacsポータブル出力
 
 * 動作環境
   ↓でテスト
@@ -61,8 +74,8 @@
    install-msys2.XXX.options が存在しない場合デフォルト値が使用される
 
 * 手順２：MSYS2パッケージアップデートとEmacsビルド
-  以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブのダウンロード・展開・ビルドを行う。
-  emacs/bin/*.exe の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる。
+  以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う
+  emacs/bin/*.exe の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる
 
   ※プロキシ経由を行っている場合は start.sh 実行前にシェル上で↓を行ってから実行、もしくは以下の設定を build-emacs.options に記述する
   #+begin_src shell-script
