@@ -51,7 +51,7 @@ Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28
 
 # 準備<a id="sec-3" name="sec-3"></a>
 
-    git clone https://github.com/yaruopooner/emacs-build-shells.git
+    $ git clone https://github.com/yaruopooner/emacs-build-shells.git
 
 またはzipをダウンロードして展開  
 
@@ -82,8 +82,8 @@ MinGW32 で起動すると x86 が生成される
 
 ## Cygwin またはその他のシェルからのインストール<a id="sec-4-3" name="sec-4-3"></a>
 
-    cd emacs-build-shells
-    ./install-msys2.sh
+    $ cd emacs-build-shells
+    $ ./install-msys2.sh
 
 ## PowerShell からインストール<a id="sec-4-4" name="sec-4-4"></a>
 
@@ -114,15 +114,15 @@ MSYS2パッケージアップデートとEmacsビルド
 以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
 `emacs/bin/*.exe` の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
 
-※プロキシ経由を行っている場合は `start.sh` 実行前にシェル上で↓を行ってから実行、もしくは以下の設定を `build-emacs.options` に記述する  
+※プロキシ経由を行っている場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
 
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
 
 `install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動して start.sh を実行  
 
-    cd /tmp/build-shells
-    ./start.sh
+    $ cd /tmp/build-shells
+    $ ./start.sh
 
 完了後にログが表示される。  
 ※ログファイルとして残る。  

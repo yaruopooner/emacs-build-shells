@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/08.02:19:56
+# last updated : 2016/10/08.02:40:26
 
 
 #+TITLE:     Emacs Build Shells
@@ -30,9 +30,9 @@
   Cygwin x86_64 2.1.0(0.287/5/3) 2015-07-14 21:28
 
 * 準備
-#+begin_src shell-script
-  git clone https://github.com/yaruopooner/emacs-build-shells.git
-#+end_src
+  #+begin_src shell-script
+    $ git clone https://github.com/yaruopooner/emacs-build-shells.git
+  #+end_src
   またはzipをダウンロードして展開
 
 * Step-1
@@ -59,8 +59,8 @@
 
 ** Cygwin またはその他のシェルからのインストール
    #+begin_src shell-script
-     cd emacs-build-shells
-     ./install-msys2.sh
+     $ cd emacs-build-shells
+     $ ./install-msys2.sh
    #+end_src
    
 ** PowerShell からインストール
@@ -89,7 +89,7 @@
   以下の手順を行うと自動でMSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う
   =emacs/bin/*.exe= の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる
 
-  ※プロキシ経由を行っている場合は =start.sh= 実行前にシェル上で↓を行ってから実行、もしくは以下の設定を =build-emacs.options= に記述する
+  ※プロキシ経由を行っている場合は =start.sh= 実行前にシェル上で↓を行ってから実行
   #+begin_src shell-script
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
@@ -98,8 +98,8 @@
   =install-msys2= で起動された MinGW64/32 上で作業ディレクトリへ移動して start.sh を実行
 
   #+begin_src shell-script
-    cd /tmp/build-shells
-    ./start.sh
+    $ cd /tmp/build-shells
+    $ ./start.sh
   #+end_src
 
   完了後にログが表示される。
