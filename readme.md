@@ -17,6 +17,7 @@
 <li><a href="#sec-5">5. Step-2</a>
 <ul>
 <li><a href="#sec-5-1">5.1. オプション</a></li>
+<li><a href="#sec-5-2">5.2. 実行</a></li>
 </ul>
 </li>
 <li><a href="#sec-6">6. 参考文献</a></li>
@@ -115,10 +116,18 @@ MSYS2パッケージアップデートとEmacsビルド
 MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
 `emacs/bin/*.exe` の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
 
-※プロキシ経由している場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
+## オプション<a id="sec-5-1" name="sec-5-1"></a>
+
+`build-emacs.options` の記述を編集することにより  
+ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能  
+`build-emacs.options` が存在しない場合デフォルト値が使用される  
+
+プロキシ経由している場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
 
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
+
+## 実行<a id="sec-5-2" name="sec-5-2"></a>
 
 `install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動し `start.sh` を実行  
 
@@ -130,12 +139,6 @@ MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロー�
 
 ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用  
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
-
-## オプション<a id="sec-5-1" name="sec-5-1"></a>
-
-`build-emacs.options` の記述を編集することにより  
-ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能  
-`build-emacs.options` が存在しない場合デフォルト値が使用される  
 
 # 参考文献<a id="sec-6" name="sec-6"></a>
 

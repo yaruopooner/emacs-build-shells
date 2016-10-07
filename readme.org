@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/08.02:44:34
+# last updated : 2016/10/08.02:46:54
 
 
 #+TITLE:     Emacs Build Shells
@@ -90,29 +90,30 @@
   MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う
   =emacs/bin/*.exe= の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる
 
-  ※プロキシ経由している場合は =start.sh= 実行前にシェル上で↓を行ってから実行
-  #+begin_src shell-script
-    $ export http_proxy="url:port"
-    $ export https_proxy="url:port"
-  #+end_src
-
-  =install-msys2= で起動された MinGW64/32 上で作業ディレクトリへ移動し =start.sh= を実行
-
-  #+begin_src shell-script
-    $ cd /tmp/build-shells
-    $ ./start.sh
-  #+end_src
-
-  完了後にログが表示される
-  ※ログファイルとして残る
-
-  ビルドされたEmacsは↓に置かれるので =emacs-XX.X= ごと自分の環境へ移動して利用
-  =/msys64/tmp/build-shells/build/XX/emacs-XX.X=
-
 ** オプション
    =build-emacs.options= の記述を編集することにより
    ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能
    =build-emacs.options= が存在しない場合デフォルト値が使用される
+
+   プロキシ経由している場合は =start.sh= 実行前にシェル上で↓を行ってから実行
+   #+begin_src shell-script
+     $ export http_proxy="url:port"
+     $ export https_proxy="url:port"
+   #+end_src
+
+** 実行
+   =install-msys2= で起動された MinGW64/32 上で作業ディレクトリへ移動し =start.sh= を実行
+
+   #+begin_src shell-script
+     $ cd /tmp/build-shells
+     $ ./start.sh
+   #+end_src
+  
+   完了後にログが表示される
+   ※ログファイルとして残る
+  
+   ビルドされたEmacsは↓に置かれるので =emacs-XX.X= ごと自分の環境へ移動して利用
+   =/msys64/tmp/build-shells/build/XX/emacs-XX.X=
 
 * 参考文献
   http://cha.la.coocan.jp/doc/NTEmacsBuild251.html#sec-7-2
