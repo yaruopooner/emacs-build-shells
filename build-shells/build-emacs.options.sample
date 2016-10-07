@@ -4,7 +4,7 @@
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 # EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/0d5694e22a70cb3ea639f27013e4134c9772f1ed/emacs-25.1-w32-ime.diff"
-ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native'
+ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
 ADDITIONAL_MAKE_OPTIONS=( bootstrap )
 # ADDITIONAL_MAKE_OPTIONS=( -j8 )

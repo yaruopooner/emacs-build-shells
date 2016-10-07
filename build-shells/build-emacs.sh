@@ -31,7 +31,7 @@ echo "detected MSYS : ${MSYSTEM}"
 # preset vars
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
-ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native'
+ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
 ADDITIONAL_MAKE_OPTIONS=( bootstrap )
 
