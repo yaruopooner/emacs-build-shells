@@ -6,8 +6,8 @@ MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-
 MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
-if [ -e "./install-msys2.options" ]; then
-    . "./install-msys2.options"
+if [ -e "./install-msys2.sh.options" ]; then
+    . "./install-msys2.sh.options"
 fi
 
 

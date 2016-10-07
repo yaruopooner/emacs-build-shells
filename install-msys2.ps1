@@ -1,3 +1,4 @@
+# -*- mode: shell-script ; coding: utf-8-dos -*-
 
 
 
@@ -77,7 +78,7 @@ function DownloadFromURI( $uri, [switch]$expand, [switch]$install )
 function SetupEnvironment()
 {
     $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
-    $uri_msys2 = "http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+    $uri_msys2 = $MSYS2_URI
 
     DownloadFromURI -Uri $uri_7zip -Expand
     DownloadFromURI -Uri $uri_msys2 -Expand
@@ -90,11 +91,22 @@ function SetupEnvironment()
 
         pushd msys64
 
-        $cmd = "./mingw64.exe"
-        # $cmd = "./mingw32.exe"
+        $cmd = "./$MSYS2_LAUNCH_SHELL"
         & $cmd
         popd
     }
+}
+
+
+
+# preset vars
+$MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+$MSYS2_LAUNCH_SHELL="mingw64.exe"
+
+# overwrite vars load
+if ( Test-Path -Path "./install-msys2.ps1.options" -PathType leaf )
+{
+    Get-Content "./install-msys2.ps1.options" -Raw | Invoke-Expression
 }
 
 
