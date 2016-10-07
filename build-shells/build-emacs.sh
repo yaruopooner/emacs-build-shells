@@ -30,9 +30,8 @@ echo "detected MSYS : ${MSYSTEM}"
 
 # preset vars
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
-PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
+EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native'
-ADDITIONAL_CPPFLAGS="${ADDITIONAL_CFLAGS}"
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
 ADDITIONAL_MAKE_OPTIONS=( bootstrap )
 
@@ -44,9 +43,13 @@ fi
 
 
 readonly EMACS_ARCHIVE_NAME=$( basename "${EMACS_ARCHIVE_URI}" )
+readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
+readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
+readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
+readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
 readonly EMACS_VERSION_NAME=$( basename --suffix ".tar.xz" "${EMACS_ARCHIVE_NAME}" )
 
-readonly PATCH_NAME=$( basename "${PATCH_URI}" )
+readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
 
 readonly PARENT_PATH=$( cd $(dirname ${0}) && pwd )
 readonly EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${EMACS_VERSION_NAME}"
@@ -58,13 +61,21 @@ function download_from_web()
 
     # donwload from web
     wget --timestamping "${EMACS_ARCHIVE_URI}"
-    wget --timestamping "${PATCH_URI}"
+    wget --timestamping "${EMACS_ARCHIVE_SIG_URI}"
+    wget --timestamping "${GNU_KEYRING_URI}"
+    wget --timestamping "${EMACS_PATCH_URI}"
+
+    # echo "${EMACS_ARCHIVE_NAME}"
+    # echo "${EMACS_ARCHIVE_SIG_NAME}"
+    # echo "${GNU_KEYRING_NAME}"
+    
+    if [ -e "${EMACS_ARCHIVE_NAME}" -a -e "${EMACS_ARCHIVE_SIG_NAME}" -a -e "${GNU_KEYRING_NAME}" ]; then
+        gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}"
+    fi
 
     # archive expand
-    if [ ! -d "${EMACS_VERSION_NAME}" ]; then
-        if [ -e "${EMACS_ARCHIVE_NAME}" ]; then
-            tar -Jxvf "${EMACS_ARCHIVE_NAME}"
-        fi
+    if [ ! -d "${EMACS_VERSION_NAME}" -a -e "${EMACS_ARCHIVE_NAME}" ]; then
+        tar -Jxvf "${EMACS_ARCHIVE_NAME}"
     fi
 
     echo "--- download_from_web : end ---"
@@ -115,8 +126,8 @@ function apply_patch()
 {
     echo "--- apply_patch : begin ---"
 
-    if [ -e "../${PATCH_NAME}" ]; then
-        patch -N -b -p0 < "../${PATCH_NAME}"
+    if [ -e "../${EMACS_PATCH_NAME}" ]; then
+        patch -N -b -p0 < "../${EMACS_PATCH_NAME}"
         local readonly RESULT=$?
 
         if [ ${RESULT} -eq 0 ]; then
@@ -128,6 +139,25 @@ function apply_patch()
     fi
 
     echo "--- apply_patch : end ---"
+}
+
+
+function revert_patch()
+{
+    echo "--- revert_patch : begin ---"
+
+    if [ -e "../${EMACS_PATCH_NAME}" ]; then
+        patch -R -b -p0 < "../${EMACS_PATCH_NAME}"
+        local readonly RESULT=$?
+
+        if [ ${RESULT} -eq 0 ]; then
+            echo "--- revert_patch : applied ---"
+        elif [ ${RESULT} -eq 1 ]; then
+            echo "--- revert_patch : already applied ---"
+        fi
+    fi
+
+    echo "--- revert_patch : end ---"
 }
 
 
@@ -149,7 +179,7 @@ function execute_configure()
     # fi
 
     # 64/32bit
-    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS="${ADDITIONAL_CFLAGS}" CPPFLAGS="${ADDITIONAL_CPPFLAGS}" ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
+    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS="${ADDITIONAL_CFLAGS}" ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
     echo "--- execute_configure : generated makefile ---"
 
     echo "--- execute_configure : end ---"
@@ -160,9 +190,6 @@ function build()
 {
     echo "--- build : begin ---"
 
-    # make -j
-    # make -j bootstrap
-    # make bootstrap
     make "${ADDITIONAL_MAKE_OPTIONS[@]}"
     make install
 
@@ -255,6 +282,7 @@ apply_patch
 execute_configure
 build
 install_shared_objects
+revert_patch
 
 popd
 
