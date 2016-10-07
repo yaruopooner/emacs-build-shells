@@ -1,16 +1,25 @@
 # -*- mode: shell-script ; coding: utf-8-unix -*-
 #! /bin/sh
 
+# preset vars
+MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+MSYS2_LAUNCH_SHELL="mingw64.exe"
 
-readonly MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+# overwrite vars load
+if [ -e "./install-msys2.options" ]; then
+    . "./install-msys2.options"
+fi
+
+
 readonly MSYS2_ARCHIVE=$( basename "${MSYS2_URI}" )
 
 
-if [ ! -f "${MSYS2_ARCHIVE}" ]; then
-    wget "${MSYS2_URI}"
-fi
+# donwload from web
+wget --timestamping "${MSYS2_URI}"
 
-if [ -f "${MSYS2_ARCHIVE}" -a ! -d msys64 ]; then
+
+# archive expand
+if [ -e "${MSYS2_ARCHIVE}" -a ! -d msys64 ]; then
     tar -Jxvf "${MSYS2_ARCHIVE}"
 fi
 
@@ -22,10 +31,9 @@ if [ -d msys64 ]; then
 
     pushd msys64
 
-    readonly MSYS_ROOT_PATH=$(pwd)
+    readonly MSYS_ROOT_PATH=$( pwd )
 
-    ./mingw64.exe
-    # ./mingw32.exe
+    "./${MSYS2_LAUNCH_SHELL}"
 
     popd
 

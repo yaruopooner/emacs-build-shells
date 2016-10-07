@@ -27,11 +27,25 @@ fi
 echo "detected MSYS : ${MSYSTEM}"
 
 
-readonly EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
+
+# preset vars
+EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
+PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
+ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native'
+ADDITIONAL_CPPFLAGS="${ADDITIONAL_CFLAGS}"
+ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
+ADDITIONAL_MAKE_OPTIONS=( bootstrap )
+
+# overwrite vars load
+if [ -e "./build-emacs.options" ]; then
+    . "./build-emacs.options"
+fi
+
+
+
 readonly EMACS_ARCHIVE_NAME=$( basename "${EMACS_ARCHIVE_URI}" )
 readonly EMACS_VERSION_NAME=$( basename --suffix ".tar.xz" "${EMACS_ARCHIVE_NAME}" )
 
-readonly PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 readonly PATCH_NAME=$( basename "${PATCH_URI}" )
 
 readonly PARENT_PATH=$( cd $(dirname ${0}) && pwd )
@@ -43,17 +57,12 @@ function download_from_web()
     echo "--- download_from_web : begin ---"
 
     # donwload from web
-    if [ ! -f "${EMACS_ARCHIVE_NAME}" ]; then
-        wget "${EMACS_ARCHIVE_URI}"
-    fi
-
-    if [ ! -f "${PATCH_NAME}" ]; then
-        wget "${PATCH_URI}"
-    fi
+    wget --timestamping "${EMACS_ARCHIVE_URI}"
+    wget --timestamping "${PATCH_URI}"
 
     # archive expand
     if [ ! -d "${EMACS_VERSION_NAME}" ]; then
-        if [ -f "${EMACS_ARCHIVE_NAME}" ]; then
+        if [ -e "${EMACS_ARCHIVE_NAME}" ]; then
             tar -Jxvf "${EMACS_ARCHIVE_NAME}"
         fi
     fi
@@ -87,7 +96,7 @@ function cleanup()
 {
     echo "--- cleanup : begin ---"
 
-    if [ -f "Makefile" ]; then
+    if [ -e "Makefile" ]; then
         make clean
         make bootstrap-clean
         # make uninstall
@@ -106,7 +115,7 @@ function apply_patch()
 {
     echo "--- apply_patch : begin ---"
 
-    if [ -f "../${PATCH_NAME}" ]; then
+    if [ -e "../${PATCH_NAME}" ]; then
         patch -N -b -p0 < "../${PATCH_NAME}"
         local readonly RESULT=$?
 
@@ -132,7 +141,7 @@ function execute_configure()
     ./autogen.sh
     echo "--- execute_configure : generated configure ---"
 
-    # if [ ! -f "configure" ]; then
+    # if [ ! -e "configure" ]; then
     #     ./autogen.sh
     #     echo "--- configure : generated ---"
     # else
@@ -140,9 +149,7 @@ function execute_configure()
     # fi
 
     # 64/32bit
-    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules --without-compress-install
-    # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" --without-imagemagick --without-dbus --with-modules
-    # PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS='-Ofast -march=corei7 -mtune=corei7' ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
+    PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS="${ADDITIONAL_CFLAGS}" CPPFLAGS="${ADDITIONAL_CPPFLAGS}" ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
     echo "--- execute_configure : generated makefile ---"
 
     echo "--- execute_configure : end ---"
@@ -155,7 +162,8 @@ function build()
 
     # make -j
     # make -j bootstrap
-    make bootstrap
+    # make bootstrap
+    make "${ADDITIONAL_MAKE_OPTIONS[@]}"
     make install
 
     echo "--- build : end ---"
@@ -198,7 +206,7 @@ function search_dependent_files()
     for FILE in "${PARENT_FILES[@]}"; do
         local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
 
-        if [ -f "${FILE_PATH}" ]; then
+        if [ -e "${FILE_PATH}" ]; then
             TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
         fi
     done
@@ -225,7 +233,7 @@ function install_shared_objects()
     for SO in "${SO_IMPORT_LIST[@]}"; do
         local readonly SO_PATH="${SO_IMPORT_PATH}/${SO}"
 
-        if [ -f "${SO_PATH}" ]; then
+        if [ -e "${SO_PATH}" ]; then
             cp "${SO_PATH}" "${SO_EXPORT_PATH}"
             echo "  ${SO}"
         # else

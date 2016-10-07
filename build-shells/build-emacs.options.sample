@@ -1,0 +1,10 @@
+# -*- mode: shell-script ; coding: utf-8-unix -*-
+#! /bin/sh
+
+EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
+PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
+ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native'
+ADDITIONAL_CPPFLAGS="${ADDITIONAL_CFLAGS}"
+ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
+ADDITIONAL_MAKE_OPTIONS=( bootstrap )
+# ADDITIONAL_MAKE_OPTIONS=( -j8 )

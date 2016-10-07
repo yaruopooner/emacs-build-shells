@@ -89,8 +89,10 @@ function SetupEnvironment()
         Write-Host $HOME
 
         pushd msys64
-        ./mingw64.exe
-        # ./mingw32.exe
+
+        $cmd = "./mingw64.exe"
+        # $cmd = "./mingw32.exe"
+        & $cmd
         popd
     }
 }
