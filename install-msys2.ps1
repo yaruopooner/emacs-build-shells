@@ -3,8 +3,13 @@
 
 
 
-function DownloadFromURI( $uri, [switch]$expand, [switch]$install )
+function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 {
+    if ( $uri.Length -eq 0 )
+    {
+        return
+    }
+
     # directory check
     # $download_directory = "./tools-latest-version/"
 
