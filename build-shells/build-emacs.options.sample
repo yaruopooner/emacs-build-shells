@@ -8,3 +8,15 @@ ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
 ADDITIONAL_MAKE_OPTIONS=( bootstrap )
 # ADDITIONAL_MAKE_OPTIONS=( -j8 )
+SO_BASE_LIST=(
+    libgcc_s_seh-1.dll  # GCC(x86_64)
+    libgcc_s_dw2-1.dll  # GCC(x86)
+    libgnutls-30.dll    # GnuTLS
+    libxml2-2.dll       # LIBXML2
+    libXpm-noX4.dll     # XPM
+    libgif-7.dll        # GIF
+    libjpeg-8.dll       # JPEG
+    libpng16-16.dll     # PNG
+    librsvg-2-2.dll     # SVG
+    libtiff-5.dll       # TIFF
+)
