@@ -34,6 +34,19 @@ EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.pat
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
 ADDITIONAL_MAKE_OPTIONS=( bootstrap )
+SO_BASE_LIST=(
+    libgcc_s_seh-1.dll  # GCC(x86_64)
+    libgcc_s_dw2-1.dll  # GCC(x86)
+    libgnutls-30.dll    # GnuTLS
+    libxml2-2.dll       # LIBXML2
+    libXpm-noX4.dll     # XPM
+    libgif-7.dll        # GIF
+    libjpeg-8.dll       # JPEG
+    libpng16-16.dll     # PNG
+    librsvg-2-2.dll     # SVG
+    libtiff-5.dll       # TIFF
+)
+
 
 # overwrite vars load
 if [ -e "./build-emacs.options" ]; then
@@ -202,19 +215,6 @@ readonly SO_EXPORT_PATH="${EMACS_BINARY_EXPORT_PATH}"
 readonly SO_IMPORT_PATH="/mingw${TARGET_PLATFORM}/bin"
 
 
-readonly SO_BASE_LIST=(
-    libgcc_s_seh-1.dll  #x86_64 only
-    libgcc_s_dw2-1.dll  #x86 only
-    libgnutls-30.dll
-    libxml2-2.dll
-    libXpm-noX4.dll
-    libgif-7.dll
-    libjpeg-8.dll
-    libpng16-16.dll
-    librsvg-2-2.dll
-    libtiff-5.dll
-)
-
 
 function search_executable_files()
 {
@@ -234,7 +234,8 @@ function search_dependent_files()
         local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
 
         if [ -e "${FILE_PATH}" ]; then
-            TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
+            # TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
+            TMP_ARRAY+=( $( ldd "${FILE_PATH}" | grep --text "${SO_IMPORT_PATH}" | sed -e "s/^\s*\(\S\+\) => .*$/\1/") )
         fi
     done
 
@@ -255,6 +256,8 @@ function install_shared_objects()
     SO_DEPENDENT_LIST+=( $( search_dependent_files "${SO_IMPORT_PATH}" "SO_BASE_LIST" ) )
 
     local readonly SO_IMPORT_LIST=( $( printf "%s\n" "${SO_BASE_LIST[@]}" "${SO_DEPENDENT_LIST[@]}" | sort | uniq ) )
+
+    # printf "%s\n" "${SO_IMPORT_LIST[@]}"
 
     echo " copy : ${SO_IMPORT_PATH} ==> ${SO_EXPORT_PATH}"
     for SO in "${SO_IMPORT_LIST[@]}"; do
