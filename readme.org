@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/08.02:49:30
+# last updated : 2016/10/17.12:22:58
 
 
 #+TITLE:     Emacs Build Shells
@@ -25,8 +25,8 @@
    - Emacsポータブル出力
 
 * ビルドされるEmacsバイナリ
-  デフォルトはMinGW64 が起動し x86_64 が生成される
-  MinGW32 で起動すると x86 が生成される
+  デフォルトはMinGW64 が起動し x86_64 で生成される
+  MinGW32 で起動すると x86 で生成される
 
 * 動作環境
   ↓でテスト
@@ -92,7 +92,7 @@
 
 ** オプション
    =build-emacs.options= の記述を編集することにより
-   ダウンロードするアーカイブ、パッチ、CFLAGS、configureの追加設定が可能
+   ダウンロードするアーカイブ、パッチ、CFLAGS、configure、DLLの追加設定が可能
    =build-emacs.options= が存在しない場合デフォルト値が使用される
 
    プロキシ経由している場合は =start.sh= 実行前にシェル上で↓を行ってから実行
@@ -103,6 +103,9 @@
 
 ** 実行
    =install-msys2= で起動された MinGW64/32 上で作業ディレクトリへ移動し =start.sh= を実行
+
+   ビルド構成を変更する場合は =start.sh= 実行前に =/tmp/build-shells/build-emacs.options= を編集する必要がある
+   ビルドを実行してしまった場合は、編集後に再実行でOK
 
    #+begin_src shell-script
      $ cd /tmp/build-shells
