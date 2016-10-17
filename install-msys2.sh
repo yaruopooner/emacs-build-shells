@@ -2,7 +2,7 @@
 #! /bin/sh
 
 # preset vars
-MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
 MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
@@ -11,16 +11,16 @@ if [ -e "./install-msys2.sh.options" ]; then
 fi
 
 
-readonly MSYS2_ARCHIVE=$( basename "${MSYS2_URI}" )
+readonly MSYS2_ARCHIVE_NAME=$( basename "${MSYS2_ARCHIVE_URI}" )
 
 
 # donwload from web
-wget --timestamping "${MSYS2_URI}"
+wget --timestamping "${MSYS2_ARCHIVE_URI}"
 
 
 # archive expand
-if [ -e "${MSYS2_ARCHIVE}" -a ! -d msys64 ]; then
-    tar -Jxvf "${MSYS2_ARCHIVE}"
+if [ -e "${MSYS2_ARCHIVE_NAME}" -a ! -d msys64 ]; then
+    tar -xvf "${MSYS2_ARCHIVE_NAME}"
 fi
 
 if [ -d msys64 ]; then

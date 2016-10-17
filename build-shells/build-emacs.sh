@@ -29,7 +29,7 @@ echo "detected MSYS : ${MSYSTEM}"
 
 
 # preset vars
-EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
+EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.gz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
@@ -60,7 +60,7 @@ readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
 readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
 readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
 readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
-readonly EMACS_VERSION_NAME=$( basename --suffix ".tar.xz" "${EMACS_ARCHIVE_NAME}" )
+readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -e "s/\(emacs-[0-9]\+\.[0-9]\+\).*/\1/" )
 
 readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
 
@@ -88,7 +88,8 @@ function download_from_web()
 
     # archive expand
     if [ ! -d "${EMACS_VERSION_NAME}" -a -e "${EMACS_ARCHIVE_NAME}" ]; then
-        tar -Jxvf "${EMACS_ARCHIVE_NAME}"
+        echo "--- download_from_web : archive expand ---"
+        tar -xvf "${EMACS_ARCHIVE_NAME}"
     fi
 
     echo "--- download_from_web : end ---"

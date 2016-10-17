@@ -1,6 +1,6 @@
 # -*- mode: shell-script ; coding: utf-8-dos -*-
 
-$MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+$MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
 $MSYS2_LAUNCH_SHELL="mingw64.exe"
 # $MSYS2_LAUNCH_SHELL="mingw32.exe"
 

@@ -25,12 +25,12 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 
     if ( !( Test-Path $downloaded_file ) )
     {
-        Write-Host "#downloading : " + $uri
+        Write-Host "#downloading : ${uri}"
         Invoke-WebRequest -Uri $uri -OutFile $downloaded_file
     }
     else
     {
-        Write-Host "#already exist : " + $uri
+        Write-Host "#already exist : ${uri}"
     }
     
 
@@ -44,7 +44,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
         {
             if ( !( Test-Path -Path $expanded_path -PathType container ) )
             {
-                Write-Host "#expanding : " + $downloaded_file
+                Write-Host "#expanding : ${downloaded_file}"
                 Expand-Archive -Path $downloaded_file -DestinationPath "./" -Force
             }
         }
@@ -53,7 +53,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
         {
             if ( !( Test-Path -Path $expanded_path -PathType any ) )
             {
-                Write-Host "#expanding : " + $downloaded_file
+                Write-Host "#expanding : ${downloaded_file}"
                 & $cmd x $downloaded_file -aos
             }
 
@@ -83,7 +83,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 function SetupEnvironment()
 {
     $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
-    $uri_msys2 = $MSYS2_URI
+    $uri_msys2 = $MSYS2_ARCHIVE_URI
 
     DownloadFromURI -Uri $uri_7zip -Expand
     DownloadFromURI -Uri $uri_msys2 -Expand
@@ -96,7 +96,7 @@ function SetupEnvironment()
 
         pushd msys64
 
-        $cmd = "./$MSYS2_LAUNCH_SHELL"
+        $cmd = "./${MSYS2_LAUNCH_SHELL}"
         & $cmd
         popd
     }
@@ -105,7 +105,7 @@ function SetupEnvironment()
 
 
 # preset vars
-$MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+$MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
 $MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
