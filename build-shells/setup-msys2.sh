@@ -2,10 +2,10 @@
 #! /bin/sh
 
 
-
 echo "---- ${0} : begin ----"
 
 
+# environment detection 
 if [ "${MSYSTEM}" = "MINGW64" ]; then
     readonly TARGET_PLATFORM=x86_64
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
@@ -13,18 +13,14 @@ elif [ "${MSYSTEM}" = "MINGW32" ]; then
 elif [ -z "${MSYSTEM}" ]; then
     echo "not detected MinGW."
     echo "please launch from MinGW64/32 shell."
-    exit
+    exit 1
 fi
 echo "detected MSYS : ${MSYSTEM}"
 
 
 
-pacman -Sy
-
-# pacman -S --noconfirm mingw-w64-${TARGET_PLATFORM}
-
-
-readonly PACKAGE_LIST=(
+# preset vars
+readonly BASE_PACKAGE_LIST=(
     svn
     git
     base-devel
@@ -39,7 +35,23 @@ readonly PACKAGE_LIST=(
     mingw-w64-${TARGET_PLATFORM}-libxml2
 )
 
+ADDITIONAL_PACKAGE_LIST=()
 
+
+# overwrite vars load
+if [ -e "./setup-msys2.options" ]; then
+    . "./setup-msys2.options"
+fi
+
+
+readonly PACKAGE_LIST=( "${BASE_PACKAGE_LIST[@]}" "${ADDITIONAL_PACKAGE_LIST[@]}" )
+
+
+echo "---- ${0} : requested package list ----"
+printf "%s\n" "${PACKAGE_LIST[@]}"
+
+
+pacman -Sy
 pacman --needed -S --noconfirm "${PACKAGE_LIST[@]}"
 
 

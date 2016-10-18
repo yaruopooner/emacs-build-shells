@@ -19,13 +19,23 @@ wget --timestamping "${MSYS2_ARCHIVE_URI}"
 
 
 # archive expand
-if [ -e "${MSYS2_ARCHIVE_NAME}" -a ! -d msys64 ]; then
+if $( [ -e "${MSYS2_ARCHIVE_NAME}" ] && [ ! -d msys64 ] ); then
     tar -xvf "${MSYS2_ARCHIVE_NAME}"
 fi
 
 if [ -d msys64 ]; then
     readonly TMP_DIR="msys64/tmp"
     cp -R build-shells "${TMP_DIR}"
+
+    readonly OPTION_FILES=(
+        "start.options"
+        "setup-msys2.options"
+        "build-emacs.options"
+    )
+    for IT in "${OPTION_FILES[@]}"; do
+        OPTION_PATH="${TMP_DIR}/build-shells/${IT}"
+        cp -n "${OPTION_PATH}.sample" "${OPTION_PATH}"
+    done
 
     unset HOME
 
@@ -41,6 +51,6 @@ if [ -d msys64 ]; then
 
     # pushd "${TMP_DIR}/build-shells"
 
-    # ${MSYS_ROOT_PATH}/mingw64.exe ./sample.h
+    # ${MSYS_ROOT_PATH}/mingw64.exe ./start.h
 fi
 

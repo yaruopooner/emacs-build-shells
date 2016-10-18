@@ -90,8 +90,24 @@ function SetupEnvironment()
 
     if ( Test-Path -Path "./msys64" -PathType container )
     {
-        $tmp_dir="msys64/tmp"
+        $tmp_dir = "msys64/tmp"
         Copy-Item build-shells $tmp_dir -recurse -force
+
+        $option_files = @(
+            "start.options",
+            "setup-msys2.options",
+            "build-emacs.options"
+        )
+        foreach ( $it in $option_files )
+        {
+            $option_path = "${tmp_dir}/build-shells/${it}"
+
+            if ( !( Test-Path -Path $option_path -PathType leaf ) )
+            {
+                Copy-Item -Path "${option_path}.sample" -Destination "${option_path}"
+            }
+        }
+
         Write-Host $HOME
 
         pushd msys64
@@ -117,5 +133,5 @@ if ( Test-Path -Path "./install-msys2.ps1.options" -PathType leaf )
 
 setupEnvironment
 
-# [Console]::ReadKey()
+[Console]::ReadKey()
 

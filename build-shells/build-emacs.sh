@@ -15,6 +15,7 @@
 echo "---- ${0} : begin ----"
 
 
+# environment detection 
 if [ "${MSYSTEM}" = "MINGW64" ]; then
     readonly TARGET_PLATFORM=64
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
@@ -22,14 +23,14 @@ elif [ "${MSYSTEM}" = "MINGW32" ]; then
 elif [ -z "${MSYSTEM}" ]; then
     echo "not detected MinGW."
     echo "please launch from MinGW64/32 shell."
-    exit
+    exit 1
 fi
 echo "detected MSYS : ${MSYSTEM}"
 
 
 
 # preset vars
-EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.gz"
+EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
@@ -82,12 +83,12 @@ function download_from_web()
     # echo "${EMACS_ARCHIVE_SIG_NAME}"
     # echo "${GNU_KEYRING_NAME}"
     
-    if [ -e "${EMACS_ARCHIVE_NAME}" -a -e "${EMACS_ARCHIVE_SIG_NAME}" -a -e "${GNU_KEYRING_NAME}" ]; then
+    if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ -e "${EMACS_ARCHIVE_SIG_NAME}" ] && [ -e "${GNU_KEYRING_NAME}" ] ); then
         gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}"
     fi
 
     # archive expand
-    if [ ! -d "${EMACS_VERSION_NAME}" -a -e "${EMACS_ARCHIVE_NAME}" ]; then
+    if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ ! -d "${EMACS_VERSION_NAME}" ] ); then
         echo "--- download_from_web : archive expand ---"
         tar -xvf "${EMACS_ARCHIVE_NAME}"
     fi
@@ -228,7 +229,7 @@ function search_executable_files()
 function search_dependent_files()
 {
     local readonly  SEARCH_PATH="${1}"
-    eval local readonly  PARENT_FILES=('${'"${2}"'[@]}')
+    eval local readonly  PARENT_FILES=( '${'"${2}"'[@]}' )
     local TMP_ARRAY=()
 
     for FILE in "${PARENT_FILES[@]}"; do
