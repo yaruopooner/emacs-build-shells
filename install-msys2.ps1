@@ -25,12 +25,12 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 
     if ( !( Test-Path $downloaded_file ) )
     {
-        Write-Host "#downloading : " + $uri
+        Write-Host "#downloading : ${uri}"
         Invoke-WebRequest -Uri $uri -OutFile $downloaded_file
     }
     else
     {
-        Write-Host "#already exist : " + $uri
+        Write-Host "#already exist : ${uri}"
     }
     
 
@@ -44,7 +44,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
         {
             if ( !( Test-Path -Path $expanded_path -PathType container ) )
             {
-                Write-Host "#expanding : " + $downloaded_file
+                Write-Host "#expanding : ${downloaded_file}"
                 Expand-Archive -Path $downloaded_file -DestinationPath "./" -Force
             }
         }
@@ -53,7 +53,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
         {
             if ( !( Test-Path -Path $expanded_path -PathType any ) )
             {
-                Write-Host "#expanding : " + $downloaded_file
+                Write-Host "#expanding : ${downloaded_file}"
                 & $cmd x $downloaded_file -aos
             }
 
@@ -83,20 +83,36 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 function SetupEnvironment()
 {
     $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
-    $uri_msys2 = $MSYS2_URI
+    $uri_msys2 = $MSYS2_ARCHIVE_URI
 
     DownloadFromURI -Uri $uri_7zip -Expand
     DownloadFromURI -Uri $uri_msys2 -Expand
 
     if ( Test-Path -Path "./msys64" -PathType container )
     {
-        $tmp_dir="msys64/tmp"
+        $tmp_dir = "msys64/tmp"
         Copy-Item build-shells $tmp_dir -recurse -force
+
+        $option_files = @(
+            "start.options",
+            "setup-msys2.options",
+            "build-emacs.options"
+        )
+        foreach ( $it in $option_files )
+        {
+            $option_path = "${tmp_dir}/build-shells/${it}"
+
+            if ( !( Test-Path -Path $option_path -PathType leaf ) )
+            {
+                Copy-Item -Path "${option_path}.sample" -Destination "${option_path}"
+            }
+        }
+
         Write-Host $HOME
 
         pushd msys64
 
-        $cmd = "./$MSYS2_LAUNCH_SHELL"
+        $cmd = "./${MSYS2_LAUNCH_SHELL}"
         & $cmd
         popd
     }
@@ -105,7 +121,7 @@ function SetupEnvironment()
 
 
 # preset vars
-$MSYS2_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+$MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
 $MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
@@ -117,5 +133,5 @@ if ( Test-Path -Path "./install-msys2.ps1.options" -PathType leaf )
 
 setupEnvironment
 
-# [Console]::ReadKey()
+[Console]::ReadKey()
 

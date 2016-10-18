@@ -15,6 +15,7 @@
 echo "---- ${0} : begin ----"
 
 
+# environment detection 
 if [ "${MSYSTEM}" = "MINGW64" ]; then
     readonly TARGET_PLATFORM=64
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
@@ -22,7 +23,7 @@ elif [ "${MSYSTEM}" = "MINGW32" ]; then
 elif [ -z "${MSYSTEM}" ]; then
     echo "not detected MinGW."
     echo "please launch from MinGW64/32 shell."
-    exit
+    exit 1
 fi
 echo "detected MSYS : ${MSYSTEM}"
 
@@ -60,7 +61,7 @@ readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
 readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
 readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
 readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
-readonly EMACS_VERSION_NAME=$( basename --suffix ".tar.xz" "${EMACS_ARCHIVE_NAME}" )
+readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -e "s/\(emacs-[0-9]\+\.[0-9]\+\).*/\1/" )
 
 readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
 
@@ -82,13 +83,14 @@ function download_from_web()
     # echo "${EMACS_ARCHIVE_SIG_NAME}"
     # echo "${GNU_KEYRING_NAME}"
     
-    if [ -e "${EMACS_ARCHIVE_NAME}" -a -e "${EMACS_ARCHIVE_SIG_NAME}" -a -e "${GNU_KEYRING_NAME}" ]; then
+    if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ -e "${EMACS_ARCHIVE_SIG_NAME}" ] && [ -e "${GNU_KEYRING_NAME}" ] ); then
         gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}"
     fi
 
     # archive expand
-    if [ ! -d "${EMACS_VERSION_NAME}" -a -e "${EMACS_ARCHIVE_NAME}" ]; then
-        tar -Jxvf "${EMACS_ARCHIVE_NAME}"
+    if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ ! -d "${EMACS_VERSION_NAME}" ] ); then
+        echo "--- download_from_web : archive expand ---"
+        tar -xvf "${EMACS_ARCHIVE_NAME}"
     fi
 
     echo "--- download_from_web : end ---"
@@ -227,7 +229,7 @@ function search_executable_files()
 function search_dependent_files()
 {
     local readonly  SEARCH_PATH="${1}"
-    eval local readonly  PARENT_FILES=('${'"${2}"'[@]}')
+    eval local readonly  PARENT_FILES=( '${'"${2}"'[@]}' )
     local TMP_ARRAY=()
 
     for FILE in "${PARENT_FILES[@]}"; do

@@ -1,0 +1,7 @@
+# -*- mode: shell-script ; coding: utf-8-unix -*-
+#! /bin/sh
+
+
+# export http_proxy="http://url:port"
+# export https_proxy="https://url:port"
+# export no_proxy="localhost,127.0.0.1"
