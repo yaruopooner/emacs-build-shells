@@ -51,6 +51,9 @@ echo "---- ${0} : requested package list ----"
 printf "%s\n" "${PACKAGE_LIST[@]}"
 
 
+
+echo "---- ${0} : install package ----"
+
 pacman -Sy
 pacman --needed -S --noconfirm "${PACKAGE_LIST[@]}"
 
