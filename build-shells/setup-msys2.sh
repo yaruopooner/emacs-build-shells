@@ -56,7 +56,14 @@ printf "%s\n" "${PACKAGE_LIST[@]}"
 echo "---- ${0} : install package ----"
 
 
-pacman -Sy
+# pacman <operation> [options] [targets]
+# Operation
+# -S --sync
+# Options
+# -y, --refresh        サーバーから最新のパッケージデータベースをダウンロード(-yy で最新の場合も強制的に更新を行う)
+# -u, --sysupgrade     インストールしたパッケージのアップグレード (-uu でダウングレードを有効)
+
+pacman -Syuu
 pacman --needed -S --noconfirm "${PACKAGE_LIST[@]}"
 
 
