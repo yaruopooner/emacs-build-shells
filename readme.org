@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/17.12:22:58
+# last updated : 2016/10/19.03:00:07
 
 
 #+TITLE:     Emacs Build Shells
@@ -114,6 +114,17 @@
   
    完了後にログが表示される
    ※ログファイルとして残る
+
+   完了前に以下のメッセージが表示された場合は、MSYS2のアップデートによりシェルの再起動が必要になっている状態。
+   この場合は Alt-F4 あるいはクローズボタンで MinGW64/32のウィンドウを一旦閉じ、
+   mingw64.exe or mingw32.exe を起動するか、
+   Step-1 のインストールシェルスクリプトを再実行して、 Step-2 も再実行する事によりビルドプロセスを継続する
+
+   - メッセージ
+   #+begin_src shell-script
+     警告: terminate MSYS2 without returning to shell and check for updates again
+     警告: for example close your terminal window instead of calling exit
+   #+end_src
   
    ビルドされたEmacsは↓に置かれるので =emacs-XX.X= ごと自分の環境へ移動して利用
    =/msys64/tmp/build-shells/build/XX/emacs-XX.X=
