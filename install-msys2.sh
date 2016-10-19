@@ -25,17 +25,7 @@ fi
 
 if [ -d msys64 ]; then
     readonly TMP_DIR="msys64/tmp"
-    cp -R build-shells "${TMP_DIR}"
-
-    readonly OPTION_FILES=(
-        "start.options"
-        "setup-msys2.options"
-        "build-emacs.options"
-    )
-    for IT in "${OPTION_FILES[@]}"; do
-        OPTION_PATH="${TMP_DIR}/build-shells/${IT}"
-        cp -n "${OPTION_PATH}.sample" "${OPTION_PATH}"
-    done
+    \cp -Rup build-shells "${TMP_DIR}"
 
     unset HOME
 
