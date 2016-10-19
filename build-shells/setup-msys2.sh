@@ -53,7 +53,7 @@ echo "---- ${0} : requested package list ----"
 printf "%s\n" "${PACKAGE_LIST[@]}"
 
 
-echo "---- ${0} : install package ----"
+echo "---- ${0} : refresh and upgrade ----"
 
 
 # pacman <operation> [options] [targets]
@@ -62,9 +62,15 @@ echo "---- ${0} : install package ----"
 # Options
 # -y, --refresh        サーバーから最新のパッケージデータベースをダウンロード(-yy で最新の場合も強制的に更新を行う)
 # -u, --sysupgrade     インストールしたパッケージのアップグレード (-uu でダウングレードを有効)
+# --needed             最新のパッケージを再インストールさせない
 
-pacman -Syuu
-pacman --needed -S --noconfirm "${PACKAGE_LIST[@]}"
+pacman -Syuu --noconfirm
+
+
+echo "---- ${0} : install package ----"
+
+
+pacman -S --needed --noconfirm "${PACKAGE_LIST[@]}"
 
 
 echo "---- ${0} : end ----"
