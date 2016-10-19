@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2016/10/19.03:00:07
+# last updated : 2016/10/19.18:12:41
 
 
 #+TITLE:     Emacs Build Shells
@@ -57,7 +57,7 @@
    ダウンロードするアーカイブ、起動する MinGW64/32 の設定が可能。
    =install-msys2.XXX.options= が存在しない場合デフォルト値が使用される
 
-** Cygwin またはその他のシェルからのインストール
+** Cygwin またはその他のbashシェルからのインストール
    #+begin_src shell-script
      $ cd emacs-build-shells
      $ ./install-msys2.sh
@@ -91,15 +91,20 @@
   =emacs/bin/*.exe= の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる
 
 ** オプション
+   =setup-msys2.options= の記述を編集することにより
+   インストールするパッケージの追加設定が可能
+
    =build-emacs.options= の記述を編集することにより
    ダウンロードするアーカイブ、パッチ、CFLAGS、configure、DLLの追加設定が可能
-   =build-emacs.options= が存在しない場合デフォルト値が使用される
+
+   =setup-msys2.options= =build-emacs.options= が存在しない場合デフォルト値が使用される
 
    プロキシ経由している場合は =start.sh= 実行前にシェル上で↓を行ってから実行
    #+begin_src shell-script
      $ export http_proxy="url:port"
      $ export https_proxy="url:port"
    #+end_src
+   ※ =start.options= に記述でもOK
 
 ** 実行
    =install-msys2= で起動された MinGW64/32 上で作業ディレクトリへ移動し =start.sh= を実行
