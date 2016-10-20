@@ -1,6 +1,51 @@
-# -*- mode: shell-script ; coding: utf-8-dos -*-
+# -*- mode: powershell ; coding: utf-8-dos -*-
 
 
+function updateDirectoryItem( [string]$source, [string]$destination )
+{
+    if ( !( Test-Path -Path $destination -PathType container ) )
+    {
+        New-Item -Name $destination -Type directory
+    }
+
+    Get-ChildItem $source -Recurse | % {
+        $dest_file_apath = Join-Path $destination $_.Name
+
+        if ( Test-Path -Path $_.FullName -PathType container )
+        {
+            if ( !( Test-Path -Path $dest_file_apath -PathType container ) )
+            {
+                New-Item -Name $dest_file_apath -Type directory
+            }
+
+            # recurse
+            updateDirectoryItem -source $_.FullName -destination $dest_file_apath
+        }
+        elseif ( Test-Path -Path $dest_file_apath -PathType leaf )
+        {
+            $src_time = ( Get-ItemProperty -Path $_.FullName ).LastWriteTime.Ticks
+            $dest_time = ( Get-ItemProperty -Path $dest_file_apath ).LastWriteTime.Ticks
+
+            if ( $src_time -gt $dest_time )
+            {
+                # overwrite copy
+                Copy-Item -Path $_.FullName -Destination $destination -Force
+                Write-Host "Overwrite File : " $_.FullName
+            }
+            else
+            {
+                # skip
+                Write-Host "Skip File : " $_.FullName
+            }
+        }
+        else
+        {
+            # copy
+            Copy-Item -Path $_.FullName -Destination $destination
+            Write-Host "Copy File : " $_.FullName
+        }
+    }
+}
 
 
 function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
@@ -91,22 +136,7 @@ function SetupEnvironment()
     if ( Test-Path -Path "./msys64" -PathType container )
     {
         $tmp_dir = "msys64/tmp"
-        Copy-Item build-shells $tmp_dir -recurse -force
-
-        $option_files = @(
-            "start.options",
-            "setup-msys2.options",
-            "build-emacs.options"
-        )
-        foreach ( $it in $option_files )
-        {
-            $option_path = "${tmp_dir}/build-shells/${it}"
-
-            if ( !( Test-Path -Path $option_path -PathType leaf ) )
-            {
-                Copy-Item -Path "${option_path}.sample" -Destination "${option_path}"
-            }
-        }
+        updateDirectoryItem -source build-shells -destination "${tmp_dir}/build-shells"
 
         Write-Host $HOME
 

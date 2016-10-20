@@ -266,7 +266,7 @@ function install_shared_objects()
         local readonly SO_PATH="${SO_IMPORT_PATH}/${SO}"
 
         if [ -e "${SO_PATH}" ]; then
-            cp "${SO_PATH}" "${SO_EXPORT_PATH}"
+            cp -up "${SO_PATH}" "${SO_EXPORT_PATH}"
             echo "  ${SO}"
         # else
         #     echo "--- install_shared_objects : ${SO_PATH} not found ---"
