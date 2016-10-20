@@ -9,7 +9,7 @@
 <li><a href="#sec-5">5. Step-1</a>
 <ul>
 <li><a href="#sec-5-1">5.1. オプション</a></li>
-<li><a href="#sec-5-2">5.2. Cygwin またはその他のシェルからのインストール</a></li>
+<li><a href="#sec-5-2">5.2. Cygwin またはその他のbashシェルからのインストール</a></li>
 <li><a href="#sec-5-3">5.3. PowerShell からインストール</a></li>
 <li><a href="#sec-5-4">5.4. 自前でダウンロード＆インストール</a></li>
 </ul>
@@ -81,7 +81,7 @@ MinGW32 を起動させるには下記のオプションで設定可能
 ダウンロードするアーカイブ、起動する MinGW64/32 の設定が可能。  
 `install-msys2.XXX.options` が存在しない場合デフォルト値が使用される  
 
-## Cygwin またはその他のシェルからのインストール<a id="sec-5-2" name="sec-5-2"></a>
+## Cygwin またはその他のbashシェルからのインストール<a id="sec-5-2" name="sec-5-2"></a>
 
     $ cd emacs-build-shells
     $ ./install-msys2.sh
@@ -118,20 +118,29 @@ MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロー�
 
 ## オプション<a id="sec-6-1" name="sec-6-1"></a>
 
+`setup-msys2.options` の記述を編集することにより  
+インストールするパッケージの追加設定が可能  
+
 `build-emacs.options` の記述を編集することにより  
 ダウンロードするアーカイブ、パッチ、CFLAGS、configure、DLLの追加設定が可能  
-`build-emacs.options` が存在しない場合デフォルト値が使用される  
+
+`setup-msys2.options` `build-emacs.options` が存在しない場合デフォルト値が使用される  
 
 プロキシ経由している場合は `start.sh` 実行前にシェル上で↓を行ってから実行  
 
     $ export http_proxy="url:port"
     $ export https_proxy="url:port"
 
+※ `start.options` に記述でもOK  
+
 ## 実行<a id="sec-6-2" name="sec-6-2"></a>
 
 `install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動し `start.sh` を実行  
 
-ビルド構成を変更する場合は `start.sh` 実行前に `/tmp/build-shells/build-emacs.options` を編集する必要がある  
+パッケージやビルド構成を変更する場合は `start.sh` 実行前に  
+`/tmp/build-shells/setup-msys2.options`  
+`/tmp/build-shells/build-emacs.options`  
+を編集する必要がある  
 ビルドを実行してしまった場合は、編集後に再実行でOK  
 
     $ cd /tmp/build-shells
