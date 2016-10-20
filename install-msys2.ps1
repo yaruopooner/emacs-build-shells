@@ -3,6 +3,8 @@
 
 function updateDirectoryItem( [string]$source, [string]$destination )
 {
+    Write-Host "Update Directory Item : ${source} ==> ${destination}"
+
     if ( !( Test-Path -Path $destination -PathType container ) )
     {
         New-Item -Name $destination -Type directory
@@ -30,19 +32,19 @@ function updateDirectoryItem( [string]$source, [string]$destination )
             {
                 # overwrite copy
                 Copy-Item -Path $_.FullName -Destination $destination -Force
-                Write-Host "Overwrite File : " $_.FullName
+                Write-Host " Overwrite File : " $_.FullName
             }
             else
             {
                 # skip
-                Write-Host "Skip File : " $_.FullName
+                Write-Host " Skip File : " $_.FullName
             }
         }
         else
         {
             # copy
             Copy-Item -Path $_.FullName -Destination $destination
-            Write-Host "Copy File : " $_.FullName
+            Write-Host " Copy File : " $_.FullName
         }
     }
 }
@@ -52,6 +54,8 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 {
     if ( $uri.Length -eq 0 )
     {
+        Write-Host "invalid URI=$uri"
+
         return
     }
 
@@ -94,7 +98,7 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
             }
         }
         $cmd = "./7za.exe"
-        if ( ( $extension -eq ".xz" ) -and ( Test-Path $cmd ) )
+        if ( ( ( $extension -eq ".xz" ) -or ( $extension -eq ".gz" ) ) -and ( Test-Path $cmd ) )
         {
             if ( !( Test-Path -Path $expanded_path -PathType any ) )
             {
