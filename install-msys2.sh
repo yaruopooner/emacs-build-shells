@@ -25,7 +25,7 @@ fi
 
 if [ -d msys64 ]; then
     readonly TMP_DIR="msys64/tmp"
-    \cp -Rup build-shells "${TMP_DIR}"
+    cp -Rup build-shells "${TMP_DIR}"
 
     unset HOME
 
