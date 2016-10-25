@@ -84,7 +84,15 @@ function download_from_web()
     # echo "${GNU_KEYRING_NAME}"
     
     if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ -e "${EMACS_ARCHIVE_SIG_NAME}" ] && [ -e "${GNU_KEYRING_NAME}" ] ); then
-        gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}"
+        local readonly SIGNATURE_INVALID=$( gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}" )
+
+        if [ ${SIGNATURE_INVALID} ]; then
+            echo "invalid signature : ${GNU_KEYRING_NAME} : ${EMACS_ARCHIVE_SIG_NAME}"
+            exit 1
+        fi
+    else
+        echo "file not found : ${EMACS_ARCHIVE_NAME}, ${EMACS_ARCHIVE_SIG_NAME}, ${GNU_KEYRING_NAME}"
+        exit 1
     fi
 
     # archive expand
