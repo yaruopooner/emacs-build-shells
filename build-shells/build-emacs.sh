@@ -61,7 +61,7 @@ readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
 readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
 readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
 readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
-readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -e "s/\(emacs-[0-9]\+\.[0-9]\+\).*/\1/" )
+readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -r "s/(emacs-[0-9]+\.[0-9]+).*/\1/" )
 
 readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
 
@@ -244,8 +244,7 @@ function search_dependent_files()
         local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
 
         if [ -e "${FILE_PATH}" ]; then
-            # TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
-            TMP_ARRAY+=( $( ldd "${FILE_PATH}" | grep --text "${SO_IMPORT_PATH}" | sed -e "s/^\s*\(\S\+\) => .*$/\1/") )
+            TMP_ARRAY+=( $( ldd "${FILE_PATH}" | grep --text "${SO_IMPORT_PATH}" | sed -r "s/^\s*(\S+) => .*$/\1/") )
         fi
     done
 
@@ -268,6 +267,7 @@ function install_shared_objects()
     local readonly SO_IMPORT_LIST=( $( printf "%s\n" "${SO_BASE_LIST[@]}" "${SO_DEPENDENT_LIST[@]}" | sort | uniq ) )
 
     # printf "%s\n" "${SO_IMPORT_LIST[@]}"
+    # echo "number of files : ${#SO_IMPORT_LIST[@]}"
 
     echo " copy : ${SO_IMPORT_PATH} ==> ${SO_EXPORT_PATH}"
     for SO in "${SO_IMPORT_LIST[@]}"; do
