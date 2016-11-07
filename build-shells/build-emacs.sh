@@ -239,6 +239,7 @@ function search_dependent_files()
     local readonly  SEARCH_PATH="${1}"
     eval local readonly  PARENT_FILES=( '${'"${2}"'[@]}' )
     local TMP_ARRAY=()
+    local FILE
 
     for FILE in "${PARENT_FILES[@]}"; do
         local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
@@ -265,6 +266,7 @@ function install_shared_objects()
     SO_DEPENDENT_LIST+=( $( search_dependent_files "${SO_IMPORT_PATH}" "SO_BASE_LIST" ) )
 
     local readonly SO_IMPORT_LIST=( $( printf "%s\n" "${SO_BASE_LIST[@]}" "${SO_DEPENDENT_LIST[@]}" | sort | uniq ) )
+    local SO
 
     # printf "%s\n" "${SO_IMPORT_LIST[@]}"
     # echo "number of files : ${#SO_IMPORT_LIST[@]}"
