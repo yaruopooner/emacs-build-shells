@@ -61,7 +61,7 @@ readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
 readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
 readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
 readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
-readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -e "s/\(emacs-[0-9]\+\.[0-9]\+\).*/\1/" )
+readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -r "s/(emacs-[0-9]+\.[0-9]+).*/\1/" )
 
 readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
 
@@ -84,7 +84,15 @@ function download_from_web()
     # echo "${GNU_KEYRING_NAME}"
     
     if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ -e "${EMACS_ARCHIVE_SIG_NAME}" ] && [ -e "${GNU_KEYRING_NAME}" ] ); then
-        gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}"
+        local readonly SIGNATURE_INVALID=$( gpg --verify --keyring "./${GNU_KEYRING_NAME}" "${EMACS_ARCHIVE_SIG_NAME}" )
+
+        if [ ${SIGNATURE_INVALID} ]; then
+            echo "invalid signature : ${GNU_KEYRING_NAME} : ${EMACS_ARCHIVE_SIG_NAME}"
+            exit 1
+        fi
+    else
+        echo "file not found : ${EMACS_ARCHIVE_NAME}, ${EMACS_ARCHIVE_SIG_NAME}, ${GNU_KEYRING_NAME}"
+        exit 1
     fi
 
     # archive expand
@@ -231,13 +239,13 @@ function search_dependent_files()
     local readonly  SEARCH_PATH="${1}"
     eval local readonly  PARENT_FILES=( '${'"${2}"'[@]}' )
     local TMP_ARRAY=()
+    local FILE
 
     for FILE in "${PARENT_FILES[@]}"; do
         local readonly FILE_PATH="${SEARCH_PATH}/${FILE}"
 
         if [ -e "${FILE_PATH}" ]; then
-            # TMP_ARRAY+=( $(objdump -x "${FILE_PATH}" | grep --text "DLL Name:" | sed -e "s/^.*: \(.*\)/\1/") )
-            TMP_ARRAY+=( $( ldd "${FILE_PATH}" | grep --text "${SO_IMPORT_PATH}" | sed -e "s/^\s*\(\S\+\) => .*$/\1/") )
+            TMP_ARRAY+=( $( ldd "${FILE_PATH}" | grep --text "${SO_IMPORT_PATH}" | sed -r "s/^\s*(\S+) => .*$/\1/") )
         fi
     done
 
@@ -258,8 +266,10 @@ function install_shared_objects()
     SO_DEPENDENT_LIST+=( $( search_dependent_files "${SO_IMPORT_PATH}" "SO_BASE_LIST" ) )
 
     local readonly SO_IMPORT_LIST=( $( printf "%s\n" "${SO_BASE_LIST[@]}" "${SO_DEPENDENT_LIST[@]}" | sort | uniq ) )
+    local SO
 
     # printf "%s\n" "${SO_IMPORT_LIST[@]}"
+    # echo "number of files : ${#SO_IMPORT_LIST[@]}"
 
     echo " copy : ${SO_IMPORT_PATH} ==> ${SO_EXPORT_PATH}"
     for SO in "${SO_IMPORT_LIST[@]}"; do
