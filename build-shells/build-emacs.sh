@@ -17,9 +17,9 @@ echo "---- ${0} : begin ----"
 
 # environment detection 
 if [ "${MSYSTEM}" = "MINGW64" ]; then
-    readonly TARGET_PLATFORM=64
+    declare -r TARGET_PLATFORM=64
 elif [ "${MSYSTEM}" = "MINGW32" ]; then
-    readonly TARGET_PLATFORM=32
+    declare -r TARGET_PLATFORM=32
 elif [ -z "${MSYSTEM}" ]; then
     echo "not detected MinGW."
     echo "please launch from MinGW64/32 shell."
@@ -30,6 +30,10 @@ echo "detected MSYS : ${MSYSTEM}"
 
 
 # preset vars
+# BUILD_FROM=repository
+BUILD_FROM=archive
+EMACS_GIT_REPOSITORY="https://github.com/emacs-mirror/emacs.git"
+EMACS_CHECKOUT_BRANCH=""
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
@@ -56,24 +60,35 @@ fi
 
 
 
-readonly EMACS_ARCHIVE_NAME=$( basename "${EMACS_ARCHIVE_URI}" )
-readonly EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
-readonly EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
-readonly GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
-readonly GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
-readonly EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -r "s/(emacs-[0-9]+\.[0-9]+).*/\1/" )
+declare -r EMACS_ARCHIVE_NAME=$( basename "${EMACS_ARCHIVE_URI}" )
+declare -r EMACS_ARCHIVE_SIG_URI="${EMACS_ARCHIVE_URI}.sig"
+declare -r EMACS_ARCHIVE_SIG_NAME=$( basename "${EMACS_ARCHIVE_SIG_URI}" )
+declare -r GNU_KEYRING_URI="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
+declare -r GNU_KEYRING_NAME=$( basename "${GNU_KEYRING_URI}" )
 
-readonly EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
+if [ "${BUILD_FROM}" = archive ]; then
+    declare -r EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -r "s/(emacs-[0-9]+\.[0-9]+).*/\1/" )
+    declare -r EMACS_SOURCE_DIR_NAME="${EMACS_VERSION_NAME}"
+elif [ "${BUILD_FROM}" = repository ]; then
+    declare -r EMACS_VERSION_NAME="${EMACS_CHECKOUT_BRANCH}"
+    declare -r EMACS_SOURCE_DIR_NAME="emacs"
+else
+    echo "--- initialize : unsupported type ${BUILD_FROM}"
+    exit 1
+fi
 
-readonly PARENT_PATH=$( cd $(dirname ${0}) && pwd )
-readonly EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${EMACS_VERSION_NAME}"
+declare -r EMACS_PATCH_NAME=$( basename "${EMACS_PATCH_URI}" )
+
+declare -r PARENT_PATH=$( cd $(dirname ${0}) && pwd )
+declare -r EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${EMACS_VERSION_NAME}"
 
 
-function download_from_web()
+# download from official archive
+function download_archive()
 {
-    echo "--- download_from_web : begin ---"
+    echo "--- download_archive : begin ---"
 
-    # donwload from web
+    # download from web
     wget --timestamping "${EMACS_ARCHIVE_URI}"
     wget --timestamping "${EMACS_ARCHIVE_SIG_URI}"
     wget --timestamping "${GNU_KEYRING_URI}"
@@ -95,33 +110,66 @@ function download_from_web()
         exit 1
     fi
 
-    # archive expand
+    # expand archive
     if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ ! -d "${EMACS_VERSION_NAME}" ] ); then
-        echo "--- download_from_web : archive expand ---"
+        echo "--- download_archive : expand archive ---"
         tar -xvf "${EMACS_ARCHIVE_NAME}"
     fi
 
-    echo "--- download_from_web : end ---"
+    echo "--- download_archive : end ---"
 }
 
     
-# donwload from git repository
-function download_from_git()
+# download from git repository
+function download_repository()
 {
-    echo "--- download_from_git : begin ---"
-
-    if [ ! -d "${EMACS_VERSION_NAME}" ]; then
-        mkdir "${EMACS_VERSION_NAME}"
-    fi
-    pushd "${EMACS_VERSION_NAME}"
+    echo "--- download_repository : begin ---"
 
     # curl --proxy "${http_proxy}"
-    # git clone git://git.sv.gnu.org/emacs.git emacs-25
-    # git clone git://git.sv.gnu.org/emacs.git emacs-25.1
-    # git clone git://git.sv.gnu.org/emacs.git
+    if [ ! -d "${EMACS_SOURCE_DIR_NAME}" ]; then
+        git clone "${EMACS_GIT_REPOSITORY}"
+    fi
+
+    pushd "${EMACS_SOURCE_DIR_NAME}"
+
+    # update & checkout build version
+    git stash
+    git status --untracked-file=all --ignored
+    git clean -fX
+    git pull
+
+    if [ -n "${EMACS_CHECKOUT_BRANCH}" ]; then
+        git checkout "${EMACS_CHECKOUT_BRANCH}"
+    else
+        echo "--- download_repository : branch name is empty ${EMACS_CHECKOUT_BRANCH}"
+        exit 1
+    fi
+
+    # git cmd success or fail
+    local readonly RESULT=$?
+
+    if [ ${RESULT} -ne 0 ]; then
+        echo "--- download_repository : checkout faild ---"
+        exit 1
+    fi
+
     popd
 
-    echo "--- download_from_git : end ---"
+    echo "--- download_repository : end ---"
+}
+
+
+# download
+function download()
+{
+    if [ "${BUILD_FROM}" = archive ]; then
+        download_archive
+    elif [ "${BUILD_FROM}" = repository ]; then
+        download_repository
+    else
+        echo "--- download : unsupported type ${BUILD_FROM}"
+        exit 1
+    fi
 }
 
 
@@ -220,9 +268,9 @@ function build()
 }
 
 
-readonly EMACS_BINARY_EXPORT_PATH="${EMACS_EXPORT_PATH}/bin"
-readonly SO_EXPORT_PATH="${EMACS_BINARY_EXPORT_PATH}"
-readonly SO_IMPORT_PATH="/mingw${TARGET_PLATFORM}/bin"
+declare -r EMACS_BINARY_EXPORT_PATH="${EMACS_EXPORT_PATH}/bin"
+declare -r SO_EXPORT_PATH="${EMACS_BINARY_EXPORT_PATH}"
+declare -r SO_IMPORT_PATH="/mingw${TARGET_PLATFORM}/bin"
 
 
 
@@ -286,11 +334,12 @@ function install_shared_objects()
     echo "--- install_shared_objects : end ---"
 }
 
+echo "${EMACS_SOURCE_DIR_NAME}"
 
-download_from_web
-# download_from_git
 
-pushd "${EMACS_VERSION_NAME}"
+download
+
+pushd "${EMACS_SOURCE_DIR_NAME}"
 
 cleanup
 apply_patch
