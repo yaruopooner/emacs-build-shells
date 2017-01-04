@@ -36,9 +36,14 @@
     -   MSYS2インストール
 -   Step-2  
     -   MSYS2パッケージアップデート
-    -   Emacsアーカイブダウンロード
+    -   Emacsソース取得  
+        -   Emacsアーカイブ(default)  
+            -   Emacsアーカイブ：ダウンロード
+            -   Emacsアーカイブ：展開
+        -   Emacsレポジトリ  
+            -   Emacsレポジトリ：クローン
+            -   Emacsレポジトリ：チェックアウト
     -   IMEパッチダウンロード
-    -   Emacsアーカイブ展開
     -   Emacsパッチ適用
     -   Emacsビルド
     -   Emacs依存DLL解析
@@ -113,8 +118,10 @@ MinGW32 を起動させるには下記のオプションで設定可能
 MSYS2パッケージアップデートとEmacsビルド  
 
 以下の手順を行うと  
-MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
+MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う  
 `emacs/bin/*.exe` の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる  
+設定変更を行うことによりEmacsアーカイブの代わりにEmacsレポジトリのクローン・チェックアウトに切り替え可能  
+※Emacsのレポジトリは大容量のためclone完了までかなりの時間がかかる  
 
 ## オプション<a id="sec-6-1" name="sec-6-1"></a>
 
@@ -122,7 +129,7 @@ MSYS2アップデートとEmacsアーカイブ＆IMEパッチのダウンロー�
 インストールするパッケージの追加設定が可能  
 
 `build-emacs.options` の記述を編集することにより  
-ダウンロードするアーカイブ、パッチ、CFLAGS、configure、DLLの追加設定が可能  
+ダウンロードするアーカイブ、レポジトリ、ブランチ名、パッチ、CFLAGS、configure、DLLなどの追加設定が可能  
 
 `setup-msys2.options` `build-emacs.options` が存在しない場合デフォルト値が使用される  
 
