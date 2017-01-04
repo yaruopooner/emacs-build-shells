@@ -92,7 +92,6 @@ function download_archive()
     wget --timestamping "${EMACS_ARCHIVE_URI}"
     wget --timestamping "${EMACS_ARCHIVE_SIG_URI}"
     wget --timestamping "${GNU_KEYRING_URI}"
-    wget --timestamping "${EMACS_PATCH_URI}"
 
     # echo "${EMACS_ARCHIVE_NAME}"
     # echo "${EMACS_ARCHIVE_SIG_NAME}"
@@ -159,6 +158,18 @@ function download_repository()
 }
 
 
+# download patch
+function download_patch()
+{
+    echo "--- download_patch : begin ---"
+
+    # download from web
+    wget --timestamping "${EMACS_PATCH_URI}"
+
+    echo "--- download_patch : end ---"
+}
+
+
 # download
 function download()
 {
@@ -170,6 +181,8 @@ function download()
         echo "--- download : unsupported type ${BUILD_FROM}"
         exit 1
     fi
+
+    download_patch
 }
 
 
