@@ -139,6 +139,7 @@ function download_repository()
 
     if [ -n "${EMACS_CHECKOUT_BRANCH}" ]; then
         git checkout "${EMACS_CHECKOUT_BRANCH}"
+        # git checkout -b "${EMACS_CHECKOUT_BRANCH}" "refs/tags/${EMACS_CHECKOUT_BRANCH}"
     else
         echo "--- download_repository : branch name is empty ${EMACS_CHECKOUT_BRANCH}"
         exit 1
