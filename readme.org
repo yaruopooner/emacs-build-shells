@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2017/01/04.17:16:49
+# last updated : 2017/01/07.00:32:33
 
 
 #+TITLE:     Emacs Build Shells
@@ -7,6 +7,13 @@
 #+EMAIL:     [https://github.com/yaruopooner]
 #+OPTIONS:   author:nil timestamp:t |:t \n:t ^:nil
 
+
+* What's New?
+** 2017-01-07 was released
+   - emacsリポジトリからのビルド対応
+
+** 2016-10-23 was released
+   - 初回リリース
 
 * できること
   以下を一括して行います
@@ -94,6 +101,7 @@
   以下の手順を行うと
   MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード・展開・パッチ適用・ビルドを行う
   =emacs/bin/*.exe= の実行に必要なDLLの依存解析を行い、必要なDLLがコピーされる
+  
   設定変更を行うことによりEmacsアーカイブの代わりにEmacsレポジトリのクローン・チェックアウトに切り替え可能
   ※Emacsのレポジトリは大容量のためclone完了までかなりの時間がかかる
 
