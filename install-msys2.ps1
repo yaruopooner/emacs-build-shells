@@ -75,7 +75,8 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
     if ( !( Test-Path $downloaded_file ) )
     {
         Write-Host "#downloading : ${uri}"
-        Invoke-WebRequest -Uri $uri -OutFile $downloaded_file
+        # Invoke-WebRequest -Uri $uri -OutFile $downloaded_file
+        Start-BitsTransfer -Source $uri -Destination $downloaded_file
     }
     else
     {
