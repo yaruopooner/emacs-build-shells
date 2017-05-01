@@ -173,11 +173,15 @@ MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード
 完了後にログが表示される  
 ※ログファイルとして残る  
 
+msys2のアップデート時にshellの再起動を促される場合がある。  
+この場合はmsys2を終了させ `install-msys2.sh` を再実行し、  
+起動したmsys2上で再び `start.sh` を実行すればよい。  
+
 ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用  
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
 
 # 参考文献<a id="sec-8" name="sec-8"></a>
 
-<http://cha.la.coocan.jp/doc/NTEmacsBuild251.html#sec-7-2>  
+<http://cha.la.coocan.jp/doc/NTEmacsBuild252.html#sec-7-2>  
 <https://github.com/chuntaro/NTEmacs64>  
-<https://gist.github.com/rzl24ozi/8c20b904c9f5e588ba99>
+<https://gist.github.com/rzl24ozi>
