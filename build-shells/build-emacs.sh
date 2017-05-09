@@ -12,7 +12,7 @@
 # export GIT_CURL_VERBOSE=1
 
 
-echo "---- ${0} : begin ----"
+echo -e "\n---- ${0} : begin ----\n"
 
 
 # environment detection 
@@ -54,8 +54,10 @@ SO_BASE_LIST=(
 
 
 # overwrite vars load
-if [ -e "./build-emacs.options" ]; then
-    . "./build-emacs.options"
+declare -r BUILD_EMACS_OPTIONS_FILE="build-emacs.options"
+
+if [ -e "./${BUILD_EMACS_OPTIONS_FILE}" ]; then
+    . "./${BUILD_EMACS_OPTIONS_FILE}"
 fi
 
 
@@ -73,7 +75,7 @@ elif [ "${BUILD_FROM}" = repository ]; then
     declare -r EMACS_VERSION_NAME="${EMACS_CHECKOUT_BRANCH}"
     declare -r EMACS_SOURCE_DIR_NAME="emacs"
 else
-    echo "--- initialize : unsupported type ${BUILD_FROM}"
+    echo -e "\n--- initialize : unsupported type ${BUILD_FROM}"
     exit 1
 fi
 
@@ -86,7 +88,7 @@ declare -r EMACS_EXPORT_PATH="${PARENT_PATH}/build/${TARGET_PLATFORM}/${EMACS_VE
 # download from official archive
 function download_archive()
 {
-    echo "--- download_archive : begin ---"
+    echo -e "\n--- download_archive : begin ---\n"
 
     # download from web
     wget --timestamping "${EMACS_ARCHIVE_URI}"
@@ -111,18 +113,18 @@ function download_archive()
 
     # expand archive
     if $( [ -e "${EMACS_ARCHIVE_NAME}" ] && [ ! -d "${EMACS_VERSION_NAME}" ] ); then
-        echo "--- download_archive : expand archive ---"
+        echo -e "\n--- download_archive : expand archive ---\n"
         tar -xvf "${EMACS_ARCHIVE_NAME}"
     fi
 
-    echo "--- download_archive : end ---"
+    echo -e "\n--- download_archive : end ---\n"
 }
 
     
 # download from git repository
 function download_repository()
 {
-    echo "--- download_repository : begin ---"
+    echo -e "\n--- download_repository : begin ---\n"
 
     # curl --proxy "${http_proxy}"
     if [ ! -d "${EMACS_SOURCE_DIR_NAME}" ]; then
@@ -141,7 +143,7 @@ function download_repository()
         git checkout "${EMACS_CHECKOUT_BRANCH}"
         # git checkout -b "${EMACS_CHECKOUT_BRANCH}" "refs/tags/${EMACS_CHECKOUT_BRANCH}"
     else
-        echo "--- download_repository : branch name is empty ${EMACS_CHECKOUT_BRANCH}"
+        echo -e "\n--- download_repository : branch name is empty ${EMACS_CHECKOUT_BRANCH}"
         exit 1
     fi
 
@@ -149,25 +151,25 @@ function download_repository()
     local readonly RESULT=$?
 
     if [ ${RESULT} -ne 0 ]; then
-        echo "--- download_repository : checkout faild ---"
+        echo -e "\n--- download_repository : checkout faild ---\n"
         exit 1
     fi
 
     popd
 
-    echo "--- download_repository : end ---"
+    echo -e "\n--- download_repository : end ---\n"
 }
 
 
 # download patch
 function download_patch()
 {
-    echo "--- download_patch : begin ---"
+    echo -e "\n--- download_patch : begin ---\n"
 
     # download from web
     wget --timestamping "${EMACS_PATCH_URI}"
 
-    echo "--- download_patch : end ---"
+    echo -e "\n--- download_patch : end ---\n"
 }
 
 
@@ -179,7 +181,7 @@ function download()
     elif [ "${BUILD_FROM}" = repository ]; then
         download_repository
     else
-        echo "--- download : unsupported type ${BUILD_FROM}"
+        echo -e "\n--- download : unsupported type ${BUILD_FROM}"
         exit 1
     fi
 
@@ -190,7 +192,7 @@ function download()
 # cleanup ( use necessary old Makefile before ./configure  )
 function cleanup()
 {
-    echo "--- cleanup : begin ---"
+    echo -e "\n--- cleanup : begin ---\n"
 
     if [ -e "Makefile" ]; then
         make clean
@@ -202,47 +204,47 @@ function cleanup()
         rm -rf "${EMACS_EXPORT_PATH}"
     fi
 
-    echo "--- cleanup : end ---"
+    echo -e "\n--- cleanup : end ---\n"
 }
 
 
 # patch
 function apply_patch()
 {
-    echo "--- apply_patch : begin ---"
+    echo -e "\n--- apply_patch : begin ---\n"
 
     if [ -e "../${EMACS_PATCH_NAME}" ]; then
         patch -N -b -p0 < "../${EMACS_PATCH_NAME}"
         local readonly RESULT=$?
 
         if [ ${RESULT} -eq 0 ]; then
-            echo "--- apply_patch : applied ---"
+            echo -e "\n--- apply_patch : applied ---\n"
             autoconf
         elif [ ${RESULT} -eq 1 ]; then
-            echo "--- apply_patch : already applied ---"
+            echo -e "\n--- apply_patch : already applied ---\n"
         fi
     fi
 
-    echo "--- apply_patch : end ---"
+    echo -e "\n--- apply_patch : end ---\n"
 }
 
 
 function revert_patch()
 {
-    echo "--- revert_patch : begin ---"
+    echo -e "\n--- revert_patch : begin ---\n"
 
     if [ -e "../${EMACS_PATCH_NAME}" ]; then
         patch -R -b -p0 < "../${EMACS_PATCH_NAME}"
         local readonly RESULT=$?
 
         if [ ${RESULT} -eq 0 ]; then
-            echo "--- revert_patch : applied ---"
+            echo -e "\n--- revert_patch : applied ---\n"
         elif [ ${RESULT} -eq 1 ]; then
-            echo "--- revert_patch : already applied ---"
+            echo -e "\n--- revert_patch : already applied ---\n"
         fi
     fi
 
-    echo "--- revert_patch : end ---"
+    echo -e "\n--- revert_patch : end ---\n"
 }
 
 
@@ -250,35 +252,35 @@ function revert_patch()
 # configure generation and execution
 function execute_configure()
 {
-    echo "--- execute_configure : begin ---"
+    echo -e "\n--- execute_configure : begin ---\n"
 
     # 'autogen.sh' generates 'configure' and other files
     ./autogen.sh
-    echo "--- execute_configure : generated configure ---"
+    echo -e "\n--- execute_configure : generated configure ---\n"
 
     # if [ ! -e "configure" ]; then
     #     ./autogen.sh
-    #     echo "--- configure : generated ---"
+    #     echo -e "\n--- configure : generated ---\n"
     # else
-    #     echo "--- configure : already exist ---"
+    #     echo -e "\n--- configure : already exist ---\n"
     # fi
 
     # 64/32bit
     PKG_CONFIG_PATH="/mingw${TARGET_PLATFORM}/lib/pkgconfig" CFLAGS="${ADDITIONAL_CFLAGS}" ./configure --prefix="${EMACS_EXPORT_PATH}" "${ADDITIONAL_CONFIGURE_OPTIONS[@]}"
-    echo "--- execute_configure : generated makefile ---"
+    echo -e "\n--- execute_configure : generated makefile ---\n"
 
-    echo "--- execute_configure : end ---"
+    echo -e "\n--- execute_configure : end ---\n"
 }
 
 
 function build()
 {
-    echo "--- build : begin ---"
+    echo -e "\n--- build : begin ---\n"
 
     make "${ADDITIONAL_MAKE_OPTIONS[@]}"
     make install
 
-    echo "--- build : end ---"
+    echo -e "\n--- build : end ---\n"
 }
 
 
@@ -317,7 +319,7 @@ function search_dependent_files()
 
 function install_shared_objects()
 {
-    echo "--- install_shared_objects : begin ---"
+    echo -e "\n--- install_shared_objects : begin ---\n"
 
 
     # glob dependency shared object
@@ -341,11 +343,11 @@ function install_shared_objects()
             cp -up "${SO_PATH}" "${SO_EXPORT_PATH}"
             echo "  ${SO}"
         # else
-        #     echo "--- install_shared_objects : ${SO_PATH} not found ---"
+        #     echo -e "\n--- install_shared_objects : ${SO_PATH} not found ---\n"
         fi
     done
     
-    echo "--- install_shared_objects : end ---"
+    echo -e "\n--- install_shared_objects : end ---\n"
 }
 
 echo "${EMACS_SOURCE_DIR_NAME}"
@@ -365,5 +367,5 @@ revert_patch
 popd
 
 
-echo "---- ${0} : end ----"
+echo -e "\n---- ${0} : end ----\n"
 

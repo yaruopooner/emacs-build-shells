@@ -2,7 +2,7 @@
 #! /bin/sh
 
 
-echo "---- ${0} : begin ----"
+echo -e "\n---- ${0} : begin ----\n"
 
 
 # environment detection 
@@ -39,21 +39,23 @@ ADDITIONAL_PACKAGE_LIST=()
 
 
 # overwrite vars load
-if [ -e "./setup-msys2.options" ]; then
-    . "./setup-msys2.options"
+declare -r SETUP_MSYS2_OPTIONS_FILE="setup-msys2.options"
+
+if [ -e "./${SETUP_MSYS2_OPTIONS_FILE}" ]; then
+    . "./${SETUP_MSYS2_OPTIONS_FILE}"
 fi
 
 
 readonly PACKAGE_LIST=( "${BASE_PACKAGE_LIST[@]}" "${ADDITIONAL_PACKAGE_LIST[@]}" )
 
 
-echo "---- ${0} : requested package list ----"
+echo -e "\n---- ${0} : requested package list ----\n"
 
 
 printf "%s\n" "${PACKAGE_LIST[@]}"
 
 
-echo "---- ${0} : refresh and upgrade ----"
+echo -e "\n---- ${0} : refresh and upgrade ----\n"
 
 
 # pacman <operation> [options] [targets]
@@ -67,11 +69,11 @@ echo "---- ${0} : refresh and upgrade ----"
 pacman -Syuu --noconfirm
 
 
-echo "---- ${0} : install package ----"
+echo -e "\n---- ${0} : install package ----\n"
 
 
 pacman -S --needed --noconfirm "${PACKAGE_LIST[@]}"
 
 
-echo "---- ${0} : end ----"
+echo -e "\n---- ${0} : end ----\n"
 
