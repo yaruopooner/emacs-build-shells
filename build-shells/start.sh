@@ -3,8 +3,10 @@
 
 
 # overwrite vars load
-if [ -e "./start.options" ]; then
-    . "./start.options"
+declare -r START_OPTIONS_FILE="start.options"
+
+if [ -e "./${START_OPTIONS_FILE}" ]; then
+    . "./${START_OPTIONS_FILE}"
 fi
 
 declare -r START_DATE=$( date +%Y-%m%d-%H%M )
