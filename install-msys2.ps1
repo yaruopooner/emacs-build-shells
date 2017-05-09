@@ -1,51 +1,59 @@
 # -*- mode: powershell ; coding: utf-8-dos -*-
 
 
-function updateDirectoryItem( [string]$source, [string]$destination )
+function updateFileItem( [string]$source, [string]$destination )
 {
-    Write-Host "Update Directory Item : ${source} ==> ${destination}"
-
-    if ( !( Test-Path -Path $destination -PathType container ) )
+    if ( Test-Path -Path $destination -PathType leaf )
     {
-        New-Item -Name $destination -Type directory
-    }
+        # already exist
+        $src_time = ( Get-ItemProperty -Path $source ).LastWriteTime.Ticks
+        $dest_time = ( Get-ItemProperty -Path $destination ).LastWriteTime.Ticks
 
-    Get-ChildItem $source -Recurse | % {
-        $dest_file_apath = Join-Path $destination $_.Name
-
-        if ( Test-Path -Path $_.FullName -PathType container )
+        if ( $src_time -gt $dest_time )
         {
-            if ( !( Test-Path -Path $dest_file_apath -PathType container ) )
-            {
-                New-Item -Name $dest_file_apath -Type directory
-            }
-
-            # recurse
-            updateDirectoryItem -source $_.FullName -destination $dest_file_apath
-        }
-        elseif ( Test-Path -Path $dest_file_apath -PathType leaf )
-        {
-            $src_time = ( Get-ItemProperty -Path $_.FullName ).LastWriteTime.Ticks
-            $dest_time = ( Get-ItemProperty -Path $dest_file_apath ).LastWriteTime.Ticks
-
-            if ( $src_time -gt $dest_time )
-            {
-                # overwrite copy
-                Copy-Item -Path $_.FullName -Destination $destination -Force
-                Write-Host " Overwrite File : " $_.FullName
-            }
-            else
-            {
-                # skip
-                Write-Host " Skip File : " $_.FullName
-            }
+            # overwrite copy
+            Copy-Item -Path $source -Destination $destination -Force
+            Write-Host " Overwrite File : " $source
         }
         else
         {
-            # copy
-            Copy-Item -Path $_.FullName -Destination $destination
-            Write-Host " Copy File : " $_.FullName
+            # skip
+            Write-Host " Skip File : " $source
         }
+        }
+    else
+    {
+        # copy
+        Copy-Item -Path $source -Destination $destination
+        Write-Host " Copy File : " $source
+    }
+}
+
+
+function updateItem( [string]$source, [string]$destination )
+{
+    if ( Test-Path -Path $source -PathType container )
+    {
+        # directory
+        Write-Host "Update Directory Item : ${source} ==> ${destination}"
+
+        if ( !( Test-Path -Path $destination -PathType container ) )
+        {
+            New-Item -Name $destination -Type directory
+        }
+
+        Get-ChildItem $source -Recurse | % {
+            $dest_file_apath = Join-Path $destination $_.Name
+
+            updateItem -source $_.FullName -destination $dest_file_apath
+        }
+    }
+    else
+    {
+        # file
+        Write-Host "Update File Item : ${source} ==> ${destination}"
+
+        updateFileItem -source $source -destination $destination
     }
 }
 
@@ -136,12 +144,15 @@ function SetupEnvironment()
     $uri_msys2 = $MSYS2_ARCHIVE_URI
 
     DownloadFromURI -Uri $uri_7zip -Expand
-    DownloadFromURI -Uri $uri_msys2 -Expand
+    if ( !( Test-Path -Path "./msys64" -PathType container ) )
+    {
+        DownloadFromURI -Uri $uri_msys2 -Expand
+    }
 
     if ( Test-Path -Path "./msys64" -PathType container )
     {
         $tmp_dir = "msys64/tmp"
-        updateDirectoryItem -source build-shells -destination "${tmp_dir}/build-shells"
+        updateItem -source "build-shells" -destination "${tmp_dir}/build-shells"
 
         Write-Host $HOME
 
@@ -160,9 +171,13 @@ $MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/ms
 $MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
-if ( Test-Path -Path "./install-msys2.ps1.options" -PathType leaf )
+$INSTALL_MSYS2_OPTIONS_FILE="install-msys2.ps1.options"
+$INSTALL_MSYS2_OPTIONS_SRC_FILE="${INSTALL_MSYS2_OPTIONS_FILE}.sample"
+
+updateItem -source "./${INSTALL_MSYS2_OPTIONS_SRC_FILE}" -destination "./${INSTALL_MSYS2_OPTIONS_FILE}"
+if ( Test-Path -Path "./${INSTALL_MSYS2_OPTIONS_FILE}" -PathType leaf )
 {
-    Get-Content "./install-msys2.ps1.options" -Raw | Invoke-Expression
+    Get-Content "./${INSTALL_MSYS2_OPTIONS_FILE}" -Raw | Invoke-Expression
 }
 
 

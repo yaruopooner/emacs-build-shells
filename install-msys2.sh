@@ -6,8 +6,12 @@ MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msy
 MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
-if [ -e "./install-msys2.sh.options" ]; then
-    . "./install-msys2.sh.options"
+declare -r INSTALL_MSYS2_OPTIONS_FILE="install-msys2.sh.options"
+declare -r INSTALL_MSYS2_OPTIONS_SRC_FILE="${INSTALL_MSYS2_OPTIONS_FILE}.sample"
+
+cp -up "./${INSTALL_MSYS2_OPTIONS_SRC_FILE}" "./${INSTALL_MSYS2_OPTIONS_FILE}"
+if [ -e "./${INSTALL_MSYS2_OPTIONS_FILE}" ]; then
+    . "./${INSTALL_MSYS2_OPTIONS_FILE}"
 fi
 
 
