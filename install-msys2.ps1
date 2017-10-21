@@ -167,7 +167,7 @@ function SetupEnvironment()
 
 
 # preset vars
-$MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20160921.tar.xz"
+$MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20170918.tar.xz"
 $MSYS2_LAUNCH_SHELL="mingw64.exe"
 
 # overwrite vars load
