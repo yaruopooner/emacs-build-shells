@@ -9,12 +9,13 @@ EMACS_CHECKOUT_BRANCH="emacs-26.1"
 # EMACS_CHECKOUT_BRANCH="master"
 
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz"
-# EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.2-windows-ime-simple.patch"
 # EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.3-windows-ime-simple.patch"
-# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/0d5694e22a70cb3ea639f27013e4134c9772f1ed/emacs-25.1-w32-ime.diff"
-# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/885140e1835f47d2d5d86acf5b22c34a168daf82/emacs-25.2-w32-ime.diff"
-# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/ce3af256814df287e2da594bc55e178674353abd/emacs-25.3-w32-ime.diff"
+# EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.2-windows-ime-simple.patch"
+
 EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/ee4457df2f54c5f3ca0d02b56e371233/raw/16794e5883211049aed08c681f71240fa32cc28f/emacs-26.1-rc1-w32-ime.diff"
+# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/ce3af256814df287e2da594bc55e178674353abd/emacs-25.3-w32-ime.diff"
+# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/885140e1835f47d2d5d86acf5b22c34a168daf82/emacs-25.2-w32-ime.diff"
+# EMACS_PATCH_URI="https://gist.githubusercontent.com/rzl24ozi/8c20b904c9f5e588ba99/raw/0d5694e22a70cb3ea639f27013e4134c9772f1ed/emacs-25.1-w32-ime.diff"
 
 ADDITIONAL_CFLAGS='-Ofast -march=native -mtune=native -static'
 ADDITIONAL_CONFIGURE_OPTIONS=( --without-imagemagick --without-dbus --with-modules --without-compress-install )
