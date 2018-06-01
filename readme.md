@@ -4,8 +4,9 @@
 <ul>
 <li><a href="#sec-1">1. What's New?</a>
 <ul>
-<li><a href="#sec-1-1">1.1. 2017-01-07 was released</a></li>
-<li><a href="#sec-1-2">1.2. 2016-10-23 was released</a></li>
+<li><a href="#sec-1-1">1.1. 2018-06-01 was released</a></li>
+<li><a href="#sec-1-2">1.2. 2017-01-07 was released</a></li>
+<li><a href="#sec-1-3">1.3. 2016-10-23 was released</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2. できること</a></li>
@@ -35,11 +36,16 @@
 
 # What's New?<a id="sec-1" name="sec-1"></a>
 
-## 2017-01-07 was released<a id="sec-1-1" name="sec-1-1"></a>
+## 2018-06-01 was released<a id="sec-1-1" name="sec-1-1"></a>
+
+-   Emacs 26.1 ビルド確認
+-   IMEパッチ対応(26.1 rc1)
+
+## 2017-01-07 was released<a id="sec-1-2" name="sec-1-2"></a>
 
 -   emacsリポジトリからのビルド対応
 
-## 2016-10-23 was released<a id="sec-1-2" name="sec-1-2"></a>
+## 2016-10-23 was released<a id="sec-1-3" name="sec-1-3"></a>
 
 -   初回リリース
 
