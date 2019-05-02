@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2018/06/01.09:59:09
+# last updated : 2019/05/02.17:52:47
 
 
 #+TITLE:     Emacs Build Shells
@@ -9,10 +9,14 @@
 
 
 * What's New?
+** 2019-05-02 was released
+   - Emacs 26.2 ビルド確認
+   - start.sh の標準出力を処理と同時に表示するように修正
+
 ** 2018-06-01 was released
    - Emacs 26.1 ビルド確認
    - IMEパッチ対応(26.1 rc1)
-     
+
 ** 2017-01-07 was released
    - emacsリポジトリからのビルド対応
 
@@ -139,8 +143,8 @@
      $ ./start.sh
    #+end_src
   
-   完了後にログが表示される
-   ※ログファイルとして残る
+   実行時にログが表示される
+   ※ログはファイルとして残る
 
    msys2のアップデート時にshellの再起動を促される場合がある。
    この場合はmsys2を終了させ =install-msys2.sh= を再実行し、
