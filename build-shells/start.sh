@@ -11,8 +11,6 @@ fi
 
 declare -r START_DATE=$( date +%Y-%m%d-%H%M )
 
-./setup-msys2.sh > setup-msys2_${START_DATE}.log 2>&1
-cat ./setup-msys2_${START_DATE}.log
+./setup-msys2.sh 2>&1 | tee setup-msys2_${START_DATE}.log
 
-./build-emacs.sh > build-emacs_${START_DATE}.log 2>&1
-cat ./build-emacs_${START_DATE}.log
+./build-emacs.sh 2>&1 | tee build-emacs_${START_DATE}.log
