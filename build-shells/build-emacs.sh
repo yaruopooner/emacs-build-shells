@@ -350,6 +350,24 @@ function install_shared_objects()
     echo -e "\n--- install_shared_objects : end ---\n"
 }
 
+
+function archive()
+{
+    echo -e "\n--- archive : begin ---\n"
+
+    local readonly ARCHIVE_DATE=$( date +%Y-%m%d-%H%M )
+    local readonly ARCHIVE_FILE_PATH="${EMACS_EXPORT_PATH}/../${EMACS_VERSION_NAME}-${ARCHIVE_DATE}.tar.gz"
+
+    set -x
+    tar --directory "${EMACS_EXPORT_PATH}/.." -zcf "${ARCHIVE_FILE_PATH}" "./${EMACS_VERSION_NAME}"
+    set +x
+
+    echo -e "\n--- archive : end ---\n"
+}
+
+
+
+
 echo "${EMACS_SOURCE_DIR_NAME}"
 
 
@@ -366,6 +384,7 @@ revert_patch
 
 popd
 
+archive
 
 echo -e "\n---- ${0} : end ----\n"
 

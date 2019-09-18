@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2019/05/02.17:52:47
+# last updated : 2019/09/18.15:46:40
 
 
 #+TITLE:     Emacs Build Shells
@@ -9,16 +9,23 @@
 
 
 * What's New?
+** 2019-09-18 was released
+   - Emacs 26.3 ビルド確認
+   - ビルドに必要なツールチェインのファイルパスを更新
+
 ** 2019-05-02 was released
    - Emacs 26.2 ビルド確認
    - start.sh の標準出力を処理と同時に表示するように修正
+   - ビルドに必要なツールチェインのファイルパスを更新
 
 ** 2018-06-01 was released
    - Emacs 26.1 ビルド確認
    - IMEパッチ対応(26.1 rc1)
+   - ビルドに必要なツールチェインのファイルパスを更新
 
 ** 2017-01-07 was released
    - emacsリポジトリからのビルド対応
+   - ビルドに必要なツールチェインのファイルパスを更新
 
 ** 2016-10-23 was released
    - 初回リリース

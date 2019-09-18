@@ -4,10 +4,11 @@
 <ul>
 <li><a href="#sec-1">1. What's New?</a>
 <ul>
-<li><a href="#sec-1-1">1.1. 2019-05-02 was released</a></li>
-<li><a href="#sec-1-2">1.2. 2018-06-01 was released</a></li>
-<li><a href="#sec-1-3">1.3. 2017-01-07 was released</a></li>
-<li><a href="#sec-1-4">1.4. 2016-10-23 was released</a></li>
+<li><a href="#sec-1-1">1.1. 2019-09-18 was released</a></li>
+<li><a href="#sec-1-2">1.2. 2019-05-02 was released</a></li>
+<li><a href="#sec-1-3">1.3. 2018-06-01 was released</a></li>
+<li><a href="#sec-1-4">1.4. 2017-01-07 was released</a></li>
+<li><a href="#sec-1-5">1.5. 2016-10-23 was released</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2. できること</a></li>
@@ -37,21 +38,29 @@
 
 # What's New?<a id="sec-1" name="sec-1"></a>
 
-## 2019-05-02 was released<a id="sec-1-1" name="sec-1-1"></a>
+## 2019-09-18 was released<a id="sec-1-1" name="sec-1-1"></a>
+
+-   Emacs 26.3 ビルド確認
+-   ビルドに必要なツールチェインのファイルパスを更新
+
+## 2019-05-02 was released<a id="sec-1-2" name="sec-1-2"></a>
 
 -   Emacs 26.2 ビルド確認
 -   start.sh の標準出力を処理と同時に表示するように修正
+-   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2018-06-01 was released<a id="sec-1-2" name="sec-1-2"></a>
+## 2018-06-01 was released<a id="sec-1-3" name="sec-1-3"></a>
 
 -   Emacs 26.1 ビルド確認
 -   IMEパッチ対応(26.1 rc1)
+-   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2017-01-07 was released<a id="sec-1-3" name="sec-1-3"></a>
+## 2017-01-07 was released<a id="sec-1-4" name="sec-1-4"></a>
 
 -   emacsリポジトリからのビルド対応
+-   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2016-10-23 was released<a id="sec-1-4" name="sec-1-4"></a>
+## 2016-10-23 was released<a id="sec-1-5" name="sec-1-5"></a>
 
 -   初回リリース
 

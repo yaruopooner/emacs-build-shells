@@ -5,10 +5,11 @@
 BUILD_FROM=archive
 
 EMACS_GIT_REPOSITORY="https://github.com/emacs-mirror/emacs.git"
-EMACS_CHECKOUT_BRANCH="emacs-26.2"
+EMACS_CHECKOUT_BRANCH="emacs-26.3"
 # EMACS_CHECKOUT_BRANCH="master"
 
-EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-26.2.tar.xz"
+EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-26.3.tar.xz"
+# EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-26.2.tar.xz"
 # EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz"
 # EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.3-windows-ime-simple.patch"
 # EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.2-windows-ime-simple.patch"
