@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2019/09/18.15:46:40
+# last updated : 2020/08/26.00:25:28
 
 
 #+TITLE:     Emacs Build Shells
@@ -9,6 +9,12 @@
 
 
 * What's New?
+** 2020-08-26 was released
+   - Emacs 27.1 ビルド確認
+   - ソース取得のデフォルトをgithubに変更
+   - ビルドに必要なツールチェインのファイルパスを更新
+   - その他必要な微修正
+
 ** 2019-09-18 was released
    - Emacs 26.3 ビルド確認
    - ビルドに必要なツールチェインのファイルパスを更新
