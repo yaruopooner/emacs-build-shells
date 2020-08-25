@@ -129,7 +129,7 @@ function download_repository()
 
     # curl --proxy "${http_proxy}"
     if [ ! -d "${EMACS_SOURCE_DIR_NAME}" ]; then
-        local CMD_ARGS=("clone" "${EMACS_GIT_REPOSITORY}")
+        local CMD_ARGS=("clone" "--config" "core.autocrlf=false" "--config" "core.eol=lf" "${EMACS_GIT_REPOSITORY}")
 
         echo "====clone detail===="
         echo "repository   : ${EMACS_SOURCE_DIR_NAME}"
