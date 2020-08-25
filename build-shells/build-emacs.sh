@@ -33,6 +33,7 @@ echo "detected MSYS : ${MSYSTEM}"
 # BUILD_FROM=repository
 BUILD_FROM=archive
 EMACS_GIT_REPOSITORY="https://github.com/emacs-mirror/emacs.git"
+EMACS_CHECKOUT_TAG=""
 EMACS_CHECKOUT_BRANCH=""
 EMACS_ARCHIVE_URI="http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz"
 EMACS_PATCH_URI="http://cha.la.coocan.jp/files/emacs-25.1-windows-ime-simple.patch"
@@ -72,7 +73,7 @@ if [ "${BUILD_FROM}" = archive ]; then
     declare -r EMACS_VERSION_NAME=$( echo "${EMACS_ARCHIVE_NAME}" | sed -r "s/(emacs-[0-9]+\.[0-9]+).*/\1/" )
     declare -r EMACS_SOURCE_DIR_NAME="${EMACS_VERSION_NAME}"
 elif [ "${BUILD_FROM}" = repository ]; then
-    declare -r EMACS_VERSION_NAME="${EMACS_CHECKOUT_BRANCH}"
+    declare -r EMACS_VERSION_NAME=$( [ -n "${EMACS_CHECKOUT_TAG}" ] && echo "${EMACS_CHECKOUT_TAG}" || echo "${EMACS_CHECKOUT_BRANCH}" )
     declare -r EMACS_SOURCE_DIR_NAME="emacs"
 else
     echo -e "\n--- initialize : unsupported type ${BUILD_FROM}"
@@ -128,7 +129,23 @@ function download_repository()
 
     # curl --proxy "${http_proxy}"
     if [ ! -d "${EMACS_SOURCE_DIR_NAME}" ]; then
-        git clone "${EMACS_GIT_REPOSITORY}"
+        local CMD_ARGS=("clone" "${EMACS_GIT_REPOSITORY}")
+
+        echo "====clone detail===="
+        echo "repository   : ${EMACS_SOURCE_DIR_NAME}"
+        echo "url          : ${EMACS_GIT_REPOSITORY}"
+        echo "command      : git ${CMD_ARGS[@]}"
+
+        git ${CMD_ARGS[@]}
+    else
+        pushd "${EMACS_SOURCE_DIR_NAME}"
+
+        echo "====fetch===="
+
+        git fetch
+        git fetch --tags
+
+        popd
     fi
 
     pushd "${EMACS_SOURCE_DIR_NAME}"
@@ -137,15 +154,34 @@ function download_repository()
     git stash
     git status --untracked-file=all --ignored
     git clean -fX
-    git pull
 
-    if [ -n "${EMACS_CHECKOUT_BRANCH}" ]; then
-        git checkout "${EMACS_CHECKOUT_BRANCH}"
-        # git checkout -b "${EMACS_CHECKOUT_BRANCH}" "refs/tags/${EMACS_CHECKOUT_BRANCH}"
-    else
-        echo -e "\n--- download_repository : branch name is empty ${EMACS_CHECKOUT_BRANCH}"
+    local BRANCH_NAME=""
+    local START_POINT=""
+
+    if [ -n "${EMACS_CHECKOUT_TAG}" ]; then
+        # tag
+        BRANCH_NAME=${EMACS_CHECKOUT_TAG}
+        START_POINT="refs/tags/${EMACS_CHECKOUT_TAG}"
+    elif [ -n "${EMACS_CHECKOUT_BRANCH}" ]; then
+        # branch
+        BRANCH_NAME=${EMACS_CHECKOUT_BRANCH}
+        START_POINT="origin/${EMACS_CHECKOUT_BRANCH}"
+    fi
+
+    # check input
+    if [ -z "${BRANCH_NAME}" ]; then
+        echo -e "\n--- download_repository : tag name is empty : ${EMACS_CHECKOUT_TAG} or branch name is empty : ${EMACS_CHECKOUT_BRANCH}"
         exit 1
     fi
+
+    # branch checkout
+    local CMD_ARGS=("checkout" "--force" "-B" "${BRANCH_NAME}" "${START_POINT}")
+
+    echo "====checkout tag or branch===="
+    echo "start-point  : ${START_POINT}"
+    echo "command      : git ${CMD_ARGS[@]}"
+
+    git ${CMD_ARGS[@]}
 
     # git cmd success or fail
     local readonly RESULT=$?
