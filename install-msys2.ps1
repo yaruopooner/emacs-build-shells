@@ -58,11 +58,11 @@ function updateItem( [string]$source, [string]$destination )
 }
 
 
-function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
+function DownloadFromURI( [string]$TaskName, [string]$Uri, [switch]$Expand, [switch]$CreateExpandDirectory, [switch]$Install, [object]$CallbackBeforeExpand = $null )
 {
-    if ( $uri.Length -eq 0 )
+    if ( $Uri.Length -eq 0 )
     {
-        Write-Host "invalid URI=$uri"
+        Write-Host "invalid URI=$Uri"
 
         return
     }
@@ -78,57 +78,109 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
     # pushd $download_directory
 
     # download
-    $downloaded_file = [System.IO.Path]::GetFileName( $uri )
+    $downloaded_file = [System.IO.Path]::GetFileName( $Uri )
 
     if ( !( Test-Path $downloaded_file ) )
     {
         Write-Host "#downloading : ${uri}"
-        # Invoke-WebRequest -Uri $uri -OutFile $downloaded_file
-        Start-BitsTransfer -Source $uri -Destination $downloaded_file
+        # Invoke-WebRequest -Uri $Uri -OutFile $downloaded_file
+        Start-BitsTransfer -Source $Uri -Destination $downloaded_file
     }
     else
     {
         Write-Host "#already exist : ${uri}"
     }
-    
+
+
+    # check same archive file decompress
+    $history_log_file = "./${TaskName}.expanded-archive"
+
+    if ( Test-Path -Path $history_log_file -PathType leaf )
+    {
+        $expanded_file = Get-Content $history_log_file
+
+        if ( $expanded_file -eq $downloaded_file )
+        {
+            # cancel expand
+            $Expand = $false
+            Write-Host "#already expanded : ${downloaded_file}"
+        }
+    }
 
     # archive expand
-    if ( $expand )
+    if ( $Expand )
     {
+        if ( $CallbackBeforeExpand -ne $null )
+        {
+            Write-Host "#execute callback before expand"
+            . $CallbackBeforeExpand
+        }
+
+        $is_expanded = $false
+
+        # zip
         $extension = [System.IO.Path]::GetExtension( $downloaded_file )
-        $expanded_path = [System.IO.Path]::GetFileNameWithoutExtension( $downloaded_file )
 
         if ( $extension -eq ".zip" )
         {
-            if ( !( Test-Path -Path $expanded_path -PathType container ) )
+            $expand_path = [System.IO.Path]::GetFileNameWithoutExtension( $downloaded_file )
+
+            if ( !( Test-Path -Path $expand_path -PathType container ) )
             {
                 Write-Host "#expanding : ${downloaded_file}"
                 Expand-Archive -Path $downloaded_file -DestinationPath "./" -Force
+                $is_expanded = $true
             }
         }
-        $cmd = "./7za.exe"
-        if ( ( ( $extension -eq ".xz" ) -or ( $extension -eq ".gz" ) ) -and ( Test-Path $cmd ) )
-        {
-            if ( !( Test-Path -Path $expanded_path -PathType any ) )
-            {
-                Write-Host "#expanding : ${downloaded_file}"
-                & $cmd x $downloaded_file -aos
-            }
 
-            $extension2 = [System.IO.Path]::GetExtension( $expanded_path )
-            if ( $extension2 -eq ".tar" )
+        # 7zip
+        $regex = [regex]".+(?<tar>`.tar)(?<compress_type>`.[^.]+)$"
+        $regex_result = $regex.Matches( $downloaded_file )
+
+        if ( $regex_result.Count -ne 0 )
+        {
+            # $archiver = "./7za.exe"
+            $archiver = "7za.exe"
+
+            $regex_result | % {
+                $is_tar = $_.Groups[ "tar" ].Success
+                $extension_index = $_.Groups[ "tar" ].Index
+            }
+            $regex_result | % {
+                $compress_type = $_.Groups[ "compress_type" ].Value
+            }
+            $expand_path = $downloaded_file.Substring( 0, $extension_index )
+
+            if ( ( Test-Path $archiver ) -and $is_tar )
             {
-                $extract_name = [System.IO.Path]::GetFileNameWithoutExtension( $expanded_path )
-                if ( !( Test-Path -Path $extract_name -PathType any ) )
+                if ( !$CreateExpandDirectory -Or !( Test-Path -Path $expand_path -PathType any ) )
                 {
-                    & $cmd x $expanded_path -aos
+                    Write-Host "#expanding : ${downloaded_file}"
+                    # & $archiver x $downloaded_file -so | $archiver x -si -ttar -o$expand_path
+                    # ↓この渡し方じゃないと実行できない
+                    # & cmd.exe /c "$archiver x $downloaded_file -so | $archiver x -si -ttar -o$expand_path"
+                    $arguments = "$archiver x $downloaded_file -so | $archiver x -si -ttar"
+                    if ( $CreateExpandDirectory )
+                    {
+                        $arguments = $arguments + "-o$expand_path"
+                    }
+                    & cmd.exe /c $arguments
+
+                    $is_expanded = $true
                 }
             }
+        }
+
+
+        if ( $is_expanded )
+        {
+            # log
+            echo $downloaded_file | Out-File -Encoding ASCII $history_log_file
         }
     }
 
     # installer execute 
-    if ( $install )
+    if ( $Install )
     {
         Start-Process -FilePath $downloaded_file
     }
@@ -137,17 +189,24 @@ function DownloadFromURI( [string]$uri, [switch]$expand, [switch]$install )
 }
 
 
+function CheckAndRemoveOldMsys2()
+{
+    if ( Test-Path -Path "./msys64" -PathType container )
+    {
+        Write-Host "#remove old directory : ./msys64"
+        # Remove-Item -Path "./msys64" -Recurse -Force
+        & cmd.exe /c "rmdir /S /Q .\msys64"
+    }
+}
+
 
 function SetupEnvironment()
 {
     $uri_7zip = "http://www.7-zip.org/a/7za920.zip"
     $uri_msys2 = $MSYS2_ARCHIVE_URI
 
-    DownloadFromURI -Uri $uri_7zip -Expand
-    if ( !( Test-Path -Path "./msys64" -PathType container ) )
-    {
-        DownloadFromURI -Uri $uri_msys2 -Expand
-    }
+    DownloadFromURI -TaskName "7zip" -Uri $uri_7zip -Expand
+    DownloadFromURI -TaskName "msys2" -Uri $uri_msys2 -Expand -CallbackBeforeExpand CheckAndRemoveOldMsys2
 
     if ( Test-Path -Path "./msys64" -PathType container )
     {
