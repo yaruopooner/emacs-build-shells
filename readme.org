@@ -1,5 +1,5 @@
 # -*- mode: org ; coding: utf-8-unix -*-
-# last updated : 2021/04/30.21:55:06
+# last updated : 2021/04/30.22:01:45
 
 
 #+TITLE:     Emacs Build Shells
@@ -11,6 +11,7 @@
 * What's New?
 ** 2021-04-30 was released
    - Emacs 27.2 ビルド確認
+   - ビルドに必要なツールチェインのファイルパスを更新
 
 ** 2020-08-26 was released
    - Emacs 27.1 ビルド確認
