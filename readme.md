@@ -1,80 +1,99 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. What's New?</a>
-<ul>
-<li><a href="#sec-1-1">1.1. 2020-08-26 was released</a></li>
-<li><a href="#sec-1-2">1.2. 2019-09-18 was released</a></li>
-<li><a href="#sec-1-3">1.3. 2019-05-02 was released</a></li>
-<li><a href="#sec-1-4">1.4. 2018-06-01 was released</a></li>
-<li><a href="#sec-1-5">1.5. 2017-01-07 was released</a></li>
-<li><a href="#sec-1-6">1.6. 2016-10-23 was released</a></li>
-</ul>
-</li>
-<li><a href="#sec-2">2. できること</a></li>
-<li><a href="#sec-3">3. ビルドされるEmacsバイナリ</a></li>
-<li><a href="#sec-4">4. 動作環境</a></li>
-<li><a href="#sec-5">5. 準備</a></li>
-<li><a href="#sec-6">6. Step-1</a>
-<ul>
-<li><a href="#sec-6-1">6.1. オプション</a></li>
-<li><a href="#sec-6-2">6.2. Cygwin またはその他のbashシェルからのインストール</a></li>
-<li><a href="#sec-6-3">6.3. PowerShell からインストール</a></li>
-<li><a href="#sec-6-4">6.4. 自前でダウンロード＆インストール</a></li>
-</ul>
-</li>
-<li><a href="#sec-7">7. Step-2</a>
-<ul>
-<li><a href="#sec-7-1">7.1. オプション</a></li>
-<li><a href="#sec-7-2">7.2. 実行</a></li>
-</ul>
-</li>
-<li><a href="#sec-8">8. 参考文献</a></li>
-</ul>
-</div>
-</div>
+
+# Table of Contents
+
+1.  [What's New?](#org1207167)
+    1.  [2021-04-30 was released](#org4238587)
+    2.  [2020-08-26 was released](#orgb84c4cc)
+    3.  [2019-09-18 was released](#orgcfddb97)
+    4.  [2019-05-02 was released](#orga74fdb4)
+    5.  [2018-06-01 was released](#orgb0e2171)
+    6.  [2017-01-07 was released](#orgd047415)
+    7.  [2016-10-23 was released](#org27724f6)
+2.  [できること](#org4301152)
+3.  [ビルドされるEmacsバイナリ](#org62ea8c1)
+4.  [動作環境](#org8a540cb)
+5.  [準備](#org0bc3387)
+6.  [Step-1](#org7b01321)
+    1.  [オプション](#org8b46dea)
+    2.  [Cygwin またはその他のbashシェルからのインストール](#org7adb72f)
+    3.  [PowerShell からインストール](#org0cf2326)
+    4.  [自前でダウンロード＆インストール](#org7ef42f1)
+7.  [Step-2](#org65fe508)
+    1.  [オプション](#org4ac6788)
+    2.  [実行](#org8f2c1e1)
+8.  [参考文献](#orgae18e6a)
 
 
 
-# What's New?<a id="sec-1" name="sec-1"></a>
+<a id="org1207167"></a>
 
-## 2020-08-26 was released<a id="sec-1-1" name="sec-1-1"></a>
+# What's New?
+
+
+<a id="org4238587"></a>
+
+## 2021-04-30 was released
+
+-   Emacs 27.2 ビルド確認
+
+
+<a id="orgb84c4cc"></a>
+
+## 2020-08-26 was released
 
 -   Emacs 27.1 ビルド確認
 -   ソース取得のデフォルトをgithubに変更
 -   ビルドに必要なツールチェインのファイルパスを更新
 -   その他必要な微修正
 
-## 2019-09-18 was released<a id="sec-1-2" name="sec-1-2"></a>
+
+<a id="orgcfddb97"></a>
+
+## 2019-09-18 was released
 
 -   Emacs 26.3 ビルド確認
 -   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2019-05-02 was released<a id="sec-1-3" name="sec-1-3"></a>
+
+<a id="orga74fdb4"></a>
+
+## 2019-05-02 was released
 
 -   Emacs 26.2 ビルド確認
 -   start.sh の標準出力を処理と同時に表示するように修正
 -   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2018-06-01 was released<a id="sec-1-4" name="sec-1-4"></a>
+
+<a id="orgb0e2171"></a>
+
+## 2018-06-01 was released
 
 -   Emacs 26.1 ビルド確認
 -   IMEパッチ対応(26.1 rc1)
 -   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2017-01-07 was released<a id="sec-1-5" name="sec-1-5"></a>
+
+<a id="orgd047415"></a>
+
+## 2017-01-07 was released
 
 -   emacsリポジトリからのビルド対応
 -   ビルドに必要なツールチェインのファイルパスを更新
 
-## 2016-10-23 was released<a id="sec-1-6" name="sec-1-6"></a>
+
+<a id="org27724f6"></a>
+
+## 2016-10-23 was released
 
 -   初回リリース
 
-# できること<a id="sec-2" name="sec-2"></a>
+
+<a id="org4301152"></a>
+
+# できること
 
 以下を一括して行います  
+
 -   Step-1  
     -   MSYS2ダウンロード
     -   MSYS2アーカイブ展開
@@ -94,24 +113,36 @@
     -   Emacs依存DLL解析
     -   Emacsポータブル出力
 
-# ビルドされるEmacsバイナリ<a id="sec-3" name="sec-3"></a>
+
+<a id="org62ea8c1"></a>
+
+# ビルドされるEmacsバイナリ
 
 デフォルトはMinGW64 が起動し x86\_64 で生成される  
 MinGW32 で起動すると x86 で生成される  
 
-# 動作環境<a id="sec-4" name="sec-4"></a>
+
+<a id="org8a540cb"></a>
+
+# 動作環境
 
 ↓でテスト  
 Windows 10/7 x86\_64  
 Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28  
 
-# 準備<a id="sec-5" name="sec-5"></a>
+
+<a id="org0bc3387"></a>
+
+# 準備
 
     $ git clone https://github.com/yaruopooner/emacs-build-shells.git
 
 またはzipをダウンロードして展開  
 
-# Step-1<a id="sec-6" name="sec-6"></a>
+
+<a id="org7b01321"></a>
+
+# Step-1
 
 MSYS2導入  
 すでに導入済みの場合は `Step-2` へ  
@@ -125,18 +156,27 @@ MSYS2はポータブル版を使用しているので環境を汚さない
 デフォルトでは MinGW64 が起動する  
 MinGW32 を起動させるには下記のオプションで設定可能  
 
-## オプション<a id="sec-6-1" name="sec-6-1"></a>
+
+<a id="org8b46dea"></a>
+
+## オプション
 
 `install-msys2.XXX.options` の記述を編集することにより  
 ダウンロードするアーカイブ、起動する MinGW64/32 の設定が可能。  
 `install-msys2.XXX.options` が存在しない場合デフォルト値が使用される  
 
-## Cygwin またはその他のbashシェルからのインストール<a id="sec-6-2" name="sec-6-2"></a>
+
+<a id="org7adb72f"></a>
+
+## Cygwin またはその他のbashシェルからのインストール
 
     $ cd emacs-build-shells
     $ ./install-msys2.sh
 
-## PowerShell からインストール<a id="sec-6-3" name="sec-6-3"></a>
+
+<a id="org0cf2326"></a>
+
+## PowerShell からインストール
 
 実行には `PowerShell 5` の環境が必要。(Windows10は最初から5だった気が)  
 5未満の場合は以下からダウンロードしてインストール  
@@ -149,7 +189,10 @@ MinGW32 を起動させるには下記のオプションで設定可能
 または  
 エクスプローラーから `install-msys2.ps1` を実行する  
 
-## 自前でダウンロード＆インストール<a id="sec-6-4" name="sec-6-4"></a>
+
+<a id="org7ef42f1"></a>
+
+## 自前でダウンロード＆インストール
 
 <http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/>  
 から自前でダウンロードして展開  
@@ -158,7 +201,10 @@ MinGW32 を起動させるには下記のオプションで設定可能
 `/msys64/tmp/`  
 へコピーして完了  
 
-# Step-2<a id="sec-7" name="sec-7"></a>
+
+<a id="org65fe508"></a>
+
+# Step-2
 
 MSYS2パッケージアップデートとEmacsビルド  
 
@@ -169,7 +215,10 @@ MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード
 設定変更を行うことによりEmacsアーカイブの代わりにEmacsレポジトリのクローン・チェックアウトに切り替え可能  
 ※Emacsのレポジトリは大容量のためclone完了までかなりの時間がかかる  
 
-## オプション<a id="sec-7-1" name="sec-7-1"></a>
+
+<a id="org4ac6788"></a>
+
+## オプション
 
 `setup-msys2.options` の記述を編集することにより  
 インストールするパッケージの追加設定が可能  
@@ -186,7 +235,10 @@ MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード
 
 ※ `start.options` に記述でもOK  
 
-## 実行<a id="sec-7-2" name="sec-7-2"></a>
+
+<a id="org8f2c1e1"></a>
+
+## 実行
 
 `install-msys2` で起動された MinGW64/32 上で作業ディレクトリへ移動し `start.sh` を実行  
 
@@ -209,8 +261,12 @@ msys2のアップデート時にshellの再起動を促される場合がある�
 ビルドされたEmacsは↓に置かれるので `emacs-XX.X` ごと自分の環境へ移動して利用  
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
 
-# 参考文献<a id="sec-8" name="sec-8"></a>
+
+<a id="orgae18e6a"></a>
+
+# 参考文献
 
 <http://cha.la.coocan.jp/doc/NTEmacsBuild252.html#sec-7-2>  
 <https://github.com/chuntaro/NTEmacs64>  
-<https://gist.github.com/rzl24ozi>
+<https://gist.github.com/rzl24ozi>  
+
