@@ -1,36 +1,45 @@
 
 # Table of Contents
 
-1.  [What's New?](#orgc53f152)
-    1.  [2021-04-30 was released](#org6de5369)
-    2.  [2020-08-26 was released](#org907f4a0)
-    3.  [2019-09-18 was released](#org176be66)
-    4.  [2019-05-02 was released](#orge7c7c69)
-    5.  [2018-06-01 was released](#org2b51388)
-    6.  [2017-01-07 was released](#orgf7e7896)
-    7.  [2016-10-23 was released](#org38dfbcc)
-2.  [できること](#orgaedeb34)
-3.  [ビルドされるEmacsバイナリ](#org4af8d9d)
-4.  [動作環境](#orgd57a577)
-5.  [準備](#org596dfd5)
-6.  [Step-1](#org861a4dd)
-    1.  [オプション](#org4c05450)
-    2.  [Cygwin またはその他のbashシェルからのインストール](#org83941ae)
-    3.  [PowerShell からインストール](#org12eb877)
-    4.  [自前でダウンロード＆インストール](#org2c33816)
-7.  [Step-2](#orgccc7e9c)
-    1.  [オプション](#orga586e71)
-    2.  [実行](#orga619aa9)
-8.  [参考文献](#orgeec5f9f)
+1.  [What's New?](#org94fbf4c)
+    1.  [2022-04-10 was released](#orge657986)
+    2.  [2021-04-30 was released](#orgffcfdcc)
+    3.  [2020-08-26 was released](#org6a44f24)
+    4.  [2019-09-18 was released](#org151fce4)
+    5.  [2019-05-02 was released](#orge99870e)
+    6.  [2018-06-01 was released](#org8e2ecc5)
+    7.  [2017-01-07 was released](#org4b7a933)
+    8.  [2016-10-23 was released](#org823312f)
+2.  [できること](#org9c3eb3d)
+3.  [ビルドされるEmacsバイナリ](#orgde8e4a4)
+4.  [動作環境](#orgab66eee)
+5.  [準備](#org02b3e5b)
+6.  [Step-1](#orgc24eb2b)
+    1.  [オプション](#orgdd5e10b)
+    2.  [Cygwin またはその他のbashシェルからのインストール](#orgd86088d)
+    3.  [PowerShell からインストール](#orgf3367fb)
+    4.  [自前でダウンロード＆インストール](#org5c236ce)
+7.  [Step-2](#orge0200e0)
+    1.  [オプション](#org01aa87f)
+    2.  [実行](#org9b2b5b8)
+8.  [参考文献](#org803ff75)
 
 
 
-<a id="orgc53f152"></a>
+<a id="org94fbf4c"></a>
 
 # What's New?
 
 
-<a id="org6de5369"></a>
+<a id="orge657986"></a>
+
+## 2022-04-10 was released
+
+-   Emacs 28.1 ビルド確認
+-   ビルドに必要なツールチェインのファイルパスを更新
+
+
+<a id="orgffcfdcc"></a>
 
 ## 2021-04-30 was released
 
@@ -38,7 +47,7 @@
 -   ビルドに必要なツールチェインのファイルパスを更新
 
 
-<a id="org907f4a0"></a>
+<a id="org6a44f24"></a>
 
 ## 2020-08-26 was released
 
@@ -48,7 +57,7 @@
 -   その他必要な微修正
 
 
-<a id="org176be66"></a>
+<a id="org151fce4"></a>
 
 ## 2019-09-18 was released
 
@@ -56,7 +65,7 @@
 -   ビルドに必要なツールチェインのファイルパスを更新
 
 
-<a id="orge7c7c69"></a>
+<a id="orge99870e"></a>
 
 ## 2019-05-02 was released
 
@@ -65,7 +74,7 @@
 -   ビルドに必要なツールチェインのファイルパスを更新
 
 
-<a id="org2b51388"></a>
+<a id="org8e2ecc5"></a>
 
 ## 2018-06-01 was released
 
@@ -74,7 +83,7 @@
 -   ビルドに必要なツールチェインのファイルパスを更新
 
 
-<a id="orgf7e7896"></a>
+<a id="org4b7a933"></a>
 
 ## 2017-01-07 was released
 
@@ -82,14 +91,14 @@
 -   ビルドに必要なツールチェインのファイルパスを更新
 
 
-<a id="org38dfbcc"></a>
+<a id="org823312f"></a>
 
 ## 2016-10-23 was released
 
 -   初回リリース
 
 
-<a id="orgaedeb34"></a>
+<a id="org9c3eb3d"></a>
 
 # できること
 
@@ -115,7 +124,7 @@
     -   Emacsポータブル出力
 
 
-<a id="org4af8d9d"></a>
+<a id="orgde8e4a4"></a>
 
 # ビルドされるEmacsバイナリ
 
@@ -123,7 +132,7 @@
 MinGW32 で起動すると x86 で生成される  
 
 
-<a id="orgd57a577"></a>
+<a id="orgab66eee"></a>
 
 # 動作環境
 
@@ -132,7 +141,7 @@ Windows 10/7 x86\_64
 Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28  
 
 
-<a id="org596dfd5"></a>
+<a id="org02b3e5b"></a>
 
 # 準備
 
@@ -141,7 +150,7 @@ Cygwin x86\_64 2.1.0(0.287/5/3) 2015-07-14 21:28
 またはzipをダウンロードして展開  
 
 
-<a id="org861a4dd"></a>
+<a id="orgc24eb2b"></a>
 
 # Step-1
 
@@ -158,7 +167,7 @@ MSYS2はポータブル版を使用しているので環境を汚さない
 MinGW32 を起動させるには下記のオプションで設定可能  
 
 
-<a id="org4c05450"></a>
+<a id="orgdd5e10b"></a>
 
 ## オプション
 
@@ -167,7 +176,7 @@ MinGW32 を起動させるには下記のオプションで設定可能
 `install-msys2.XXX.options` が存在しない場合デフォルト値が使用される  
 
 
-<a id="org83941ae"></a>
+<a id="orgd86088d"></a>
 
 ## Cygwin またはその他のbashシェルからのインストール
 
@@ -175,7 +184,7 @@ MinGW32 を起動させるには下記のオプションで設定可能
     $ ./install-msys2.sh
 
 
-<a id="org12eb877"></a>
+<a id="orgf3367fb"></a>
 
 ## PowerShell からインストール
 
@@ -191,7 +200,7 @@ MinGW32 を起動させるには下記のオプションで設定可能
 エクスプローラーから `install-msys2.ps1` を実行する  
 
 
-<a id="org2c33816"></a>
+<a id="org5c236ce"></a>
 
 ## 自前でダウンロード＆インストール
 
@@ -203,7 +212,7 @@ MinGW32 を起動させるには下記のオプションで設定可能
 へコピーして完了  
 
 
-<a id="orgccc7e9c"></a>
+<a id="orge0200e0"></a>
 
 # Step-2
 
@@ -217,7 +226,7 @@ MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード
 ※Emacsのレポジトリは大容量のためclone完了までかなりの時間がかかる  
 
 
-<a id="orga586e71"></a>
+<a id="org01aa87f"></a>
 
 ## オプション
 
@@ -237,7 +246,7 @@ MSYS2アップデートとEmacsアーカイブ/IMEパッチのダウンロード
 ※ `start.options` に記述でもOK  
 
 
-<a id="orga619aa9"></a>
+<a id="org9b2b5b8"></a>
 
 ## 実行
 
@@ -263,7 +272,7 @@ msys2のアップデート時にshellの再起動を促される場合がある�
 `/msys64/tmp/build-shells/build/XX/emacs-XX.X`  
 
 
-<a id="orgeec5f9f"></a>
+<a id="org803ff75"></a>
 
 # 参考文献
 
