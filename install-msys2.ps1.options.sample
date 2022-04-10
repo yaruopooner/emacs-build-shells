@@ -1,7 +1,8 @@
 # -*- mode: powershell ; coding: utf-8-dos -*-
 
 # https://repo.msys2.org/distrib/x86_64/
-$MSYS2_ARCHIVE_URI="https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20200720.tar.xz"
+$MSYS2_ARCHIVE_URI="https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20220319.tar.xz"
+# $MSYS2_ARCHIVE_URI="https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20200720.tar.xz"
 # $MSYS2_ARCHIVE_URI="https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20190524.tar.xz"
 # $MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20190524.tar.xz"
 # $MSYS2_ARCHIVE_URI="http://jaist.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20180531.tar.xz"

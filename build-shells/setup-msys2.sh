@@ -24,6 +24,7 @@ readonly BASE_PACKAGE_LIST=(
     svn
     git
     base-devel
+    autotools
     mingw-w64-${TARGET_PLATFORM}-toolchain
     mingw-w64-${TARGET_PLATFORM}-gnutls
     mingw-w64-${TARGET_PLATFORM}-xpm-nox
